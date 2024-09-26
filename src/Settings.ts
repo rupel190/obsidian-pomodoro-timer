@@ -26,6 +26,7 @@ export interface Settings {
     logFile: LogFileType
     logFocused: boolean
     logPath: string
+    logSectionName: string
     logLevel: LogLevel
     logTemplate: string
     logFormat: LogFormat
@@ -47,6 +48,7 @@ export default class PomodoroSettings extends PluginSettingTab {
         logFile: 'NONE',
         logFocused: false,
         logPath: '',
+        logSectionName: '',
         logLevel: 'ALL',
         logTemplate: '',
         logFormat: 'VERBOSE',
@@ -227,6 +229,17 @@ export default class PomodoroSettings extends PluginSettingTab {
                         })
                     })
             }
+
+            new Setting(containerEl)
+            .setName('Log section header name')
+            .setDesc('The section name under which log entries are organized (including # signs)')
+            .addText((text) => {
+                text.inputEl.style.width = '300px'
+                text.setValue(this._settings.logSectionName)
+                text.onChange((value) => {
+                    this.updateSettings({ logSectionName: value })
+                })
+            });
 
             new Setting(containerEl)
                 .setName('Log Level')

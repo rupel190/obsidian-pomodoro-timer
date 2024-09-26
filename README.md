@@ -57,6 +57,14 @@ For those requiring more detailed logging, consider setting up a custom [log tem
 - 🥤 (pomodoro::BREAK) (duration:: 25m) (begin:: 2023-12-20 16:06) - (end:: 2023-12-20 16:07)
 ```
 
+
+### Custom Section Header (Optional)
+
+By default, logs are appended to the end of the file specified in the settings.
+
+If you want to append logs under a specific section header within the file, you can use the "Log section header name" setting. Simply copy and paste the unique section name as plain markdown syntax, including the "#" symbols (e.g., "## Logs header").
+
+
 ### Custom Log Template (Optional)
 
 1. Install the [Templater](https://github.com/SilentVoid13/Templater) plugin.

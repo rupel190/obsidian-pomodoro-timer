@@ -47,16 +47,47 @@ export default class Logger {
     }
 
     public async log(ctx: LogContext): Promise<TFile | void> {
+        const settings = this.plugin!.getSettings()
+
         const logFile = await this.resolveLogFile(ctx)
         const log = this.createLog(ctx)
         if (logFile) {
             const logText = await this.toText(log, logFile)
-            if (logText) {
-                await this.plugin.app.vault.append(logFile, `\n${logText}`)
+            if (logText && settings.logSectionName) {
+                const fileContent = await this.plugin.app.vault.read(logFile);
+                const headerPosition = await this.findHeaderInFile(fileContent, settings.logSectionName)
+                
+                const updatedText = await this.updateFileContent(logText, fileContent, headerPosition)
+                await this.plugin.app.vault.modify(logFile, updatedText);
             }
+            else if (logText && !settings.logSectionName) {
+                await this.plugin.app.vault.append(logFile, `\n${logText}`)
+            } 
         }
 
         return logFile
+    }
+
+    private async updateFileContent(logText: string, fileContent: string, headerPosition: number) {
+        return fileContent.slice(0, headerPosition) + `${logText}\n` + fileContent.slice(headerPosition);
+    }
+
+    private async findHeaderInFile(fileContent: string, logSectionName: string) {
+        const headerPosition = fileContent.indexOf(logSectionName);
+
+        if (headerPosition == -1) {
+            new Notice('Section name not found inside the log file!')
+        }
+
+        // Find the start of the next section (next header at the same or higher level)
+        const nextHeaderRegex = /^(#{1,6})\s+/gm; // Match any header from # to ######
+        nextHeaderRegex.lastIndex = headerPosition + logSectionName.length;
+
+        // Find the next header after the current section
+        const nextHeaderMatch = nextHeaderRegex.exec(fileContent);
+
+        // Determine the end of the section
+        return nextHeaderMatch ? nextHeaderMatch.index : fileContent.length;
     }
 
     private async resolveLogFile(ctx: LogContext): Promise<TFile | void> {
