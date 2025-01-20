@@ -1,10 +1,11 @@
 import { TimerView, VIEW_TYPE_TIMER } from 'TimerView'
-import { Notice, Plugin, WorkspaceLeaf } from 'obsidian'
+import { Editor, editorInfoField, MarkdownView, Notice, Plugin, WorkspaceLeaf, type MarkdownFileInfo } from 'obsidian'
 import PomodoroSettings, { type Settings } from 'Settings'
 import StatusBar from 'StatusBarComponent.svelte'
 import Timer from 'Timer'
 import Tasks from 'Tasks'
 import TaskTracker from 'TaskTracker'
+import { quickStartSelectedTask } from 'quickStartSelectedTask'
 
 export default class PomodoroTimerPlugin extends Plugin {
     private settingTab?: PomodoroSettings
@@ -82,7 +83,16 @@ export default class PomodoroTimerPlugin extends Plugin {
                 })
             },
         })
+
+        this.addCommand({
+            id: 'quick-start-selected-task',
+            name: 'Quick Start Selected Task',
+			editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
+				quickStartSelectedTask(editor, view, this.tracker, this.timer, this.tasks);
+			}
+        })
     }
+
 
     public getSettings(): Settings {
         return (

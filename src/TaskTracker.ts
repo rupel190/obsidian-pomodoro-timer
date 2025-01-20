@@ -76,7 +76,17 @@ export default class TaskTracker implements TaskTrackerStore {
     get file() {
         return this.state.file
     }
-
+	
+	public setFile(file: TFile) {
+		this.store.update((state) => {
+			if (state.file?.path !== file?.path) {
+				state.task = undefined
+			}
+			state.file = file ?? state.file
+			return state
+		})
+	}
+	
     public togglePinned() {
         this.store.update((state) => {
             state.pinned = !state.pinned
