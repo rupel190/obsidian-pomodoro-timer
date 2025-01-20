@@ -13,6 +13,7 @@ This plugin integrates a customizable Pomodoro timer into your Obsidian workspac
 -   **Status Bar Display**: Monitor your progress directly from Obsidian's status bar to keep focusing.
 -   **Daily Note Integration**: Automatically log your sessions in your daily notes for better tracking.
 -   **Task Tracking**: Automatically refresh the 'actual time' field for the task in focus.
+-   **Quick Start Command**: use the Quick Start Select Task command, which is bindable to a hot key, to select the task, pin it, and start the timer.  Any timer that was already running for another task is logged. 
 
 ## Notification
 
