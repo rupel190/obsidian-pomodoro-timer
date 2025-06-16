@@ -48,6 +48,11 @@ const removeTask = () => {
     tracker.clear()
 }
 
+const changeComment = (e: Event) => {
+    let target = e.target as HTMLInputElement
+    tracker.setComment(target.value)
+}
+
 const progress = (item: TaskItem) => {
     if (!$settings.showTaskProgress) {
         return 0
@@ -160,7 +165,7 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                 <div class="pomodoro-tasks-active">
                     {#if $tracker.task}
                         <div class="pomodoro-tasks-item">
-                            <div class="pomodoro-tasks-name">
+                            <div class="pomodoro-tasks-name-row">
                                 <input
                                     type="text"
                                     value={$tracker.task?.name}
@@ -187,6 +192,13 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                                     >
                                 </span>
                             </div>
+							<input
+								class="pomodoro-comment-input"
+								type="text"
+								placeholder="Session comment..."
+								value={$tracker.comment}
+								on:input={changeComment}
+							/>
                         </div>
                     {/if}
                 </div>
@@ -236,7 +248,7 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                             ? 'pomodoro-tasks-checked'
                             : ''}"
                     >
-                        <div class="pomodoro-tasks-name">
+                        <div class="pomodoro-tasks-name-row">
                             {#if item.checked}
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -381,22 +393,33 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     color: var(--text-muted);
 }
 
-.pomodoro-tasks-name svg {
+.pomodoro-tasks-name-row svg {
     margin-right: 5px;
 }
 
-.pomodoro-tasks-name svg {
+.pomodoro-tasks-name-row svg {
     color: var(--color-blue);
 }
 
-.pomodoro-tasks-checked .pomodoro-tasks-name svg {
+.pomodoro-tasks-checked .pomodoro-tasks-name-row svg {
     color: var(--color-green);
 }
 
-.pomodoro-tasks-name {
+.pomodoro-tasks-name-row {
     width: 100%;
     display: flex;
     align-items: baseline;
+}
+
+.pomodoro-comment-input {
+    margin-top: 0.4rem;
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--background-modifier-border);
+    background-color: var(--background-secondary);
+    color: var(--text-normal);
 }
 
 .filter-active {
@@ -408,7 +431,7 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     border-top: 1px solid var(--background-modifier-border);
 }
 
-.pomodoro-tasks-checked .pomodoro-tasks-name {
+.pomodoro-tasks-checked .pomodoro-tasks-name-row {
     text-decoration: line-through;
     color: var(--text-muted);
 }

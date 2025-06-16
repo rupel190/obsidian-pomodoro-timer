@@ -11,6 +11,7 @@ export type TimerLog = {
     mode: Mode
     session: number
     task: TaskLog
+    comment: string
     finished: boolean
 }
 
@@ -37,7 +38,7 @@ export type TaskLog = Pick<
     | 'tags'
 >
 
-export type LogContext = TimerState & { task: TaskItem }
+export type LogContext = TimerState & { task: TaskItem, comment?: string }
 
 export default class Logger {
     private plugin: PomodoroTimerPlugin
@@ -123,6 +124,7 @@ export default class Logger {
             end: new Date().getTime(),
             session: ctx.duration,
             task: ctx.task,
+            comment: ctx.comment ?? '',
             finished: ctx.count == ctx.elapsed,
         }
     }
@@ -143,7 +145,7 @@ export default class Logger {
                 )
             } catch (e) {
                 new Notice('Invalid template')
-                console.error('invalid templat:', e)
+                console.error('invalid template:', e)
                 return ''
             }
         } else {
