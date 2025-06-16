@@ -1,11 +1,11 @@
 {
-	"id": "pomodoro-timer",
-	"name": "Pomodoro Timer",
+	"id": "dev-pomodoro-timer",
+	"name": "Pomodoro Timer (Dev Edition)",
 	"version": "1.2.3",
 	"minAppVersion": "0.15.0",
-	"description": "A pomodoro timer that helps manage your daily focus",
-	"author": "eatgrass",
-	"fundingUrl": "https://www.buymeacoffee.com/eatgrass",
-	"authorUrl": "https://github.com/eatgrass",
+	"description": "For your daily Pomodoro needs. **Now with new features!**",
+	"author": "rupel",
+	"fundingUrl": "https://ko-fi.com/rupel190",
+	"authorUrl": "https://github.com/rupel190",
 	"isDesktopOnly": false
 }
