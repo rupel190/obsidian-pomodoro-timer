@@ -168,6 +168,7 @@ export default class Timer implements Readable<TimerStore> {
 
     private createLogContext(s: TimerState): LogContext {
         let state = { ...s }
+		let comment = this.plugin.tracker?.comment ?? ''
         let task = this.plugin.tracker?.task
             ? { ...this.plugin.tracker.task }
             : { ...DEFAULT_TASK }
@@ -177,7 +178,7 @@ export default class Timer implements Readable<TimerStore> {
             task.fileName = this.plugin.tracker?.file?.name ?? ''
         }
 
-        return { ...state, task }
+        return { ...state, task, comment: comment }
     }
 
     private async processLog(ctx: LogContext) {

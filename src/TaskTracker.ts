@@ -14,12 +14,14 @@ export type TaskTrackerState = {
     task?: TaskItem
     file?: TFile
     pinned: boolean
+	comment: string
 }
 
 type TaskTrackerStore = Readable<TaskTrackerState>
 
 const DEFAULT_TRACKER_STATE: TaskTrackerState = {
     pinned: false,
+	comment: ''
 }
 
 export default class TaskTracker implements TaskTrackerStore {
@@ -77,6 +79,10 @@ export default class TaskTracker implements TaskTrackerStore {
         return this.state.file
     }
 
+	get comment() {
+		return this.state.comment
+	}
+
     public togglePinned() {
         this.store.update((state) => {
             state.pinned = !state.pinned
@@ -97,6 +103,13 @@ export default class TaskTracker implements TaskTrackerStore {
             if (state.task) {
                 state.task.name = name
             }
+            return state
+        })
+    }
+
+    public setComment(comment: string) {
+        this.store.update((state) => {
+			state.comment = comment
             return state
         })
     }
@@ -165,6 +178,7 @@ export default class TaskTracker implements TaskTrackerStore {
 
     public finish() {}
 
+	//TODO: "Destory"?
     public destory() {
         for (let unsub of this.unsubscribers) {
             unsub()
@@ -210,7 +224,9 @@ export default class TaskTracker implements TaskTrackerStore {
                 })
                 await this.incrTaskActual(this.task.blockLink, f)
             }
-        }
+        } else if(!this.plugin.getSettings().enableTaskTracking) {
+			console.debug("Task tracking is disabled — skipping tomato update.");
+		}
     }
 
     private async incrTaskActual(blockLink: string, file: TFile) {

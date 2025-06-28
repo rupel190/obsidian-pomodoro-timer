@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-pomodoro-timer",
+	"name": "dev-pomodoro-timer",
 	"version": "1.2.3",
-	"description": "A pomodoro timer that helps manage your daily focus",
+	"description": "For your daily Pomodoro needs. **Now with new features!**",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
@@ -31,7 +31,7 @@
 		"svelte": "^4.2.2",
 		"svelte-preprocess": "^5.0.4",
 		"tslib": "2.4.0",
-		"typescript": "5.2.2"
+		"typescript": "^5.2.2"
 	},
 	"dependencies": {
 		"obsidian-daily-notes-interface": "^0.9.4"
