@@ -224,7 +224,9 @@ export default class TaskTracker implements TaskTrackerStore {
                 })
                 await this.incrTaskActual(this.task.blockLink, f)
             }
-        }
+        } else if(!this.plugin.getSettings().enableTaskTracking) {
+			console.debug("Task tracking is disabled — skipping tomato update.");
+		}
     }
 
     private async incrTaskActual(blockLink: string, file: TFile) {
