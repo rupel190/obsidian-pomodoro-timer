@@ -1,9 +1,9 @@
 {
-	"id": "dev-pomodoro-timer",
-	"name": "Pomodoro Timer (Dev Edition)",
-	"version": "1.2.3",
+	"id": "pomodoro-timer-ex",
+	"name": "Pomodoro Timer (Forked)",
+	"version": "1.3.0",
 	"minAppVersion": "0.15.0",
-	"description": "For your daily Pomodoro needs. **Now with new features!**",
+	"description": "For your daily Pomodoro needs. Now with new features!",
 	"author": "rupel",
 	"fundingUrl": "https://ko-fi.com/rupel190",
 	"authorUrl": "https://github.com/rupel190",
