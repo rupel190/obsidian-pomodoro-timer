@@ -3,22 +3,18 @@
 ![image](https://github.com/eatgrass/obsidian-pomodoro-timer/assets/2351076/f2f4f339-ba66-423f-b6a5-79fe91e13ef0)
 Actively maintained by [@rupel190](https://github.com/rupel190), based on the original by [@eatgrass](https://github.com/eatgrass). Includes new features and fixes not yet merged upstream.
 
-
 ## Introduction
 
 A modern Pomodoro timer plugin for Obsidian, now with comment logging and more features on the horizon.
 
-
-
 ## Features
 
--   **Customizable Timer**: Adjust work/break durations to match your workflow.
--   **System + Custom Audio Alerts**: Notification options for every environment.
--	**Status Bar Display**: Monitor your progress directly from Obsidian's status bar to save screen space.
--   **Daily Note Integration**: Log to your daily note or custom templates.
--	**Verbose Metadata Output**: Includes `begin::`, `duration::`, `comment::` and more.
--   **Task Tracking (🍅)**: Auto-increment actual pomodoro count in task metadata.
-
+- **Customizable Timer**: Adjust work/break durations to match your workflow.
+- **System + Custom Audio Alerts**: Notification options for every environment.
+- **Status Bar Display**: Monitor your progress directly from Obsidian's status bar to save screen space.
+- **Daily Note Integration**: Log to your daily note or custom templates.
+- **Verbose Metadata Output**: Includes `begin::`, `duration::`, `comment::` and more.
+- **Task Tracking (🍅)**: Auto-increment actual pomodoro count in task metadata.
 
 ---
 
@@ -32,9 +28,7 @@ A modern Pomodoro timer plugin for Obsidian, now with comment logging and more f
    **Don't forget the file extension (like `.mp3`, `.wav` etc.).**
 3. Click the `play` button next to the path to verify the audio
 
-
 ---
-
 
 ## Task Tracking
 
@@ -48,9 +42,7 @@ To activate this feature, first enable it in the settings. Then add pomodoros in
 -   [ ] With Task plugin enabled [🍅:: 5] ➕ 2023-12-29 📅 2024-01-10
 ```
 
-
 ---
-
 
 ## Log
 
@@ -73,16 +65,14 @@ For those requiring more detailed logging, consider setting up a custom [log tem
 - 🥤 (pomodoro::BREAK) (duration:: 25m) (begin:: 2023-12-20 16:06) - (end:: 2023-12-20 16:07)
 ```
 
-
 ---
 
-
-### Custom Log Template (Optional)
+### Templater - using a custom log template (Optional)
 
 1. Install the [Templater](https://github.com/SilentVoid13/Templater) plugin.
 2. Compose your log template script using the `log` object, which stores session information.
 
-#### Plugin data to use with templater:
+#### Plugin data to use with templater
 
 ```javascript
 // TimerLog
@@ -94,7 +84,7 @@ For those requiring more detailed logging, consider setting up a custom [log tem
     begin: Moment,     // start time
     end: Moment,       // end time
     task: TaskItem,    // focused task
-	comment: string,
+ comment: string,
 }
 
 // TaskItem
@@ -116,12 +106,12 @@ For those requiring more detailed logging, consider setting up a custom [log tem
     priority: string,     // task priority
     recurrence: string,   // task recurrence rule
     tags: string[],       // task tags
-	expected: number,     // expected pomodoros
-	actual: number        // actual pomodoros
+ expected: number,     // expected pomodoros
+ actual: number        // actual pomodoros
 }
 ```
 
-#### Example:
+#### Example
 
 ```javascript
 <%*
@@ -139,17 +129,17 @@ if (log.mode == "WORK") {
 %>
 ```
 
-#### Example to write in separate files:
+#### Example to write in separate files
+
 [Template that writes all tasks inside the folder to a single file](https://github.com/rupel190/obsidian-plugin-pomodoro-template)
 
 ---
 
-
-## Examples of Using with DataView
+### Examples of using DataView (Optional)
 
 As the name suggests, data written using Templater can be dynamically viewed with DataView.
 
-### Example: Log Table
+#### Example: Log Table
 
 This DataView script generates a table showing Pomodoro sessions with their durations, start, and end times.
 
@@ -172,7 +162,7 @@ dv.paragraph(table)
 ```  
 </pre>
 
-### Example: Summary View
+#### Example: Summary View
 
 This DataView script presents a summary of Pomodoro sessions, categorized by date.
 
@@ -208,12 +198,9 @@ dv.table(
 ```
 </pre>
 
-
 ---
 
-
 ## CSS Variables
-
 
 | Variable                       | Default            |
 | ------------------------------ | ------------------ |
@@ -221,7 +208,6 @@ dv.table(
 | --pomodoro-timer-elapsed-color | var(--color-green) |
 | --pomodoro-timer-text-color    | var(--text-normal) |
 | --pomodoro-timer-dot-color     | var(--color-ted)   |
-
 
 ## FAQ
 
@@ -239,9 +225,4 @@ The original plugin by @eatgrass is no longer actively maintained. This fork bui
 
 ---
 
-Would you be my first ko-fi?
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I3I013760H)
-
-
-
-
