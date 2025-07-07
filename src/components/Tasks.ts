@@ -1,11 +1,11 @@
 import PomodoroTimerPlugin from 'main'
 import { type CachedMetadata, type TFile, type App } from 'obsidian'
-import { extractTaskComponents } from 'utils'
+import type { Unsubscriber } from 'svelte/motion'
 import { writable, derived, type Readable, type Writable } from 'svelte/store'
 
-import type { TaskFormat } from 'Settings'
-import type { Unsubscriber } from 'svelte/motion'
-import { DESERIALIZERS } from 'serializer'
+import { extractTaskComponents } from '@utils/utils'
+import type { TaskFormat } from '@components/Settings'
+import { DESERIALIZERS } from '@serializers'
 
 export type TaskItem = {
 	path: string
@@ -136,7 +136,7 @@ export default class Tasks implements Readable<TaskStore> {
 	}
 
 	public getTaskItemByLine(taskLine: number) {
-		return this.state.list.find((taskItem => taskItem.line == taskLine));
+		return this.state.list.find((taskItem => taskItem.line === taskLine))
 	}
 
 	public clearTasks() {

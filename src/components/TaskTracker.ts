@@ -49,21 +49,16 @@ export default class TaskTracker implements TaskTrackerStore {
 		plugin.registerEvent(
 			//loadtasks on file change
 			plugin.app.workspace.on('active-leaf-change', () => {
-				let file = this.plugin.app.workspace.getActiveFile()
-				if (file && !this.state.pinned) {
-					this.setFile(file);
+				if (!this.state.pinned) {
+					this.setToCurrentFile()
 				}
 			}),
 		)
 
 		plugin.app.workspace.onLayoutReady(() => {
-			let file = this.plugin.app.workspace.getActiveFile()
-			if (file) {
-				this.setFile(file)
-			}
+			this.setToCurrentFile()
 		})
 	}
-
 	get task() {
 		return this.state.task
 	}
@@ -84,6 +79,13 @@ export default class TaskTracker implements TaskTrackerStore {
 			state.file = file ?? state.file
 			return state
 		})
+	}
+
+	public setToCurrentFile() {
+		let file = this.plugin.app.workspace.getActiveFile()
+		if (file) {
+			this.setFile(file)
+		}
 	}
 
 	public setTaskName(name: string) {

@@ -1,10 +1,12 @@
-import { TimerView, VIEW_TYPE_TIMER } from 'TimerView'
-import { Editor, MarkdownView, Notice, Plugin, WorkspaceLeaf, type MarkdownFileInfo } from 'obsidian'
-import PomodoroSettings, { type Settings } from 'Settings'
-import StatusBar from 'StatusBarComponent.svelte'
-import Timer from 'Timer'
-import Tasks from 'Tasks'
-import TaskTracker from 'TaskTracker'
+import { Notice, Plugin, WorkspaceLeaf, Editor, MarkdownView } from 'obsidian'
+import type { MarkdownFileInfo } from 'obsidian'
+import StatusBar from '@svelte/StatusBarComponent.svelte'
+
+import PomodoroSettings, { type Settings } from '@components/Settings'
+import { TimerView, VIEW_TYPE_TIMER } from '@components/TimerView'
+import Timer from '@components/Timer'
+import Tasks from '@components/Tasks'
+import TaskTracker from '@components/TaskTracker'
 
 export default class PomodoroTimerPlugin extends Plugin {
 	private settingTab?: PomodoroSettings

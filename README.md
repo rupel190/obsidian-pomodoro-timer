@@ -1,29 +1,35 @@
-<h1 align="center">Pomodoro Timer for Obsidian</h1>
+<h1 align="center">Pomodoro Timer for Obsidian (Community Fork)</h1>
 
 ![image](https://github.com/eatgrass/obsidian-pomodoro-timer/assets/2351076/f2f4f339-ba66-423f-b6a5-79fe91e13ef0)
+Actively maintained by [@rupel190](https://github.com/rupel190), based on the original by [@eatgrass](https://github.com/eatgrass). Includes new features and fixes not yet merged upstream.
 
 ## Introduction
 
-This plugin integrates a customizable Pomodoro timer into your Obsidian workspace, helping you focus and manage your time effectively.
+A modern Pomodoro timer plugin for Obsidian, now with comment logging and more features on the horizon.
 
 ## Features
 
--   **Customizable Timer**: Set your work and break intervals to suit your productivity style.
--   **Audible Alerts**: Stay on track with audio notifications signaling the end of each session.
--   **Status Bar Display**: Monitor your progress directly from Obsidian's status bar to keep focusing.
--   **Daily Note Integration**: Automatically log your sessions in your daily notes for better tracking.
--   **Task Tracking**: Automatically refresh the 'actual time' field for the task in focus.
--   **Quick Start Command**: use the Quick Start Select Task command, which is bindable to a hot key, to select the task, pin it, and start the timer.  Any timer that was already running for another task is logged. 
+- **Customizable Timer**: Adjust work/break durations to match your workflow.
+- **System + Custom Audio Alerts**: Notification options for every environment.
+- **Status Bar Display**: Monitor your progress directly from Obsidian's status bar to save screen space.
+- **Daily Note Integration**: Log to your daily note or custom templates.
+- **Verbose Metadata Output**: Includes `begin::`, `duration::`, `comment::` and more.
+- **Task Tracking (🍅)**: Auto-increment actual pomodoro count in task metadata.
+- **Quick Start Command**: use the Quick Start Select Task command, which is bindable to a hot key, to select the task, pin it, and start the timer. Any timer that was already running for another task is logged.
+
+---
 
 ## Notification
 
 ### Custom Notification Sound
 
 1. Put the audio file into your vault.
-2. Set its path ralative to the vault's root.
+2. Set its path relative to the vault's root.
    For example: your audio file is in `AudioFiles` and named `notification.mp3`, your path would be `AudioFiles/notification.mp3`.
    **Don't forget the file extension (like `.mp3`, `.wav` etc.).**
 3. Click the `play` button next to the path to verify the audio
+
+---
 
 ## Task Tracking
 
@@ -36,6 +42,8 @@ To activate this feature, first enable it in the settings. Then add pomodoros in
 -   [ ] Task with only the actual pomodoros field [🍅:: 5]
 -   [ ] With Task plugin enabled [🍅:: 5] ➕ 2023-12-29 📅 2024-01-10
 ```
+
+---
 
 ## Log
 
@@ -58,10 +66,14 @@ For those requiring more detailed logging, consider setting up a custom [log tem
 - 🥤 (pomodoro::BREAK) (duration:: 25m) (begin:: 2023-12-20 16:06) - (end:: 2023-12-20 16:07)
 ```
 
-### Custom Log Template (Optional)
+---
+
+### Templater - using a custom log template (Optional)
 
 1. Install the [Templater](https://github.com/SilentVoid13/Templater) plugin.
 2. Compose your log template script using the `log` object, which stores session information.
+
+#### Plugin data to use with templater
 
 ```javascript
 // TimerLog
@@ -73,6 +85,7 @@ For those requiring more detailed logging, consider setting up a custom [log tem
     begin: Moment,     // start time
     end: Moment,       // end time
     task: TaskItem,    // focused task
+ comment: string,
 }
 
 // TaskItem
@@ -94,12 +107,12 @@ For those requiring more detailed logging, consider setting up a custom [log tem
     priority: string,     // task priority
     recurrence: string,   // task recurrence rule
     tags: string[],       // task tags
-	expected: number,     // expected pomodoros
-	actual: number        // actual pomodoros
+ expected: number,     // expected pomodoros
+ actual: number        // actual pomodoros
 }
 ```
 
-here is an example
+#### Example
 
 ```javascript
 <%*
@@ -117,9 +130,17 @@ if (log.mode == "WORK") {
 %>
 ```
 
-## Examples of Using with DataView
+#### Example to write in separate files
 
-### Log Table
+[Template that writes all tasks inside the folder to a single file](https://github.com/rupel190/obsidian-plugin-pomodoro-template)
+
+---
+
+### Examples of using DataView (Optional)
+
+As the name suggests, data written using Templater can be dynamically viewed with DataView.
+
+#### Example: Log Table
 
 This DataView script generates a table showing Pomodoro sessions with their durations, start, and end times.
 
@@ -142,7 +163,7 @@ dv.paragraph(table)
 ```  
 </pre>
 
-### Summary View
+#### Example: Summary View
 
 This DataView script presents a summary of Pomodoro sessions, categorized by date.
 
@@ -178,6 +199,8 @@ dv.table(
 ```
 </pre>
 
+---
+
 ## CSS Variables
 
 | Variable                       | Default            |
@@ -197,6 +220,10 @@ To switch sessions, simply click on the `Work/Break` label displayed on the time
 
 You can adjust the break interval setting to `0`, this will turn off `Break` sessions.
 
+## Why This Fork?
+
+The original plugin by @eatgrass is no longer actively maintained. This fork builds upon their great work, fixes known issues, and adds requested features. Contributions welcome!
+
 ---
 
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="150">](https://www.buymeacoffee.com/eatgrass)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I3I013760H)
