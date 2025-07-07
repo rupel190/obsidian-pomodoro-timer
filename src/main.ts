@@ -1,127 +1,133 @@
 import { TimerView, VIEW_TYPE_TIMER } from 'TimerView'
-import { Editor, editorInfoField, MarkdownView, Notice, Plugin, WorkspaceLeaf, type MarkdownFileInfo } from 'obsidian'
+import { Editor, MarkdownView, Notice, Plugin, WorkspaceLeaf, type MarkdownFileInfo } from 'obsidian'
 import PomodoroSettings, { type Settings } from 'Settings'
 import StatusBar from 'StatusBarComponent.svelte'
 import Timer from 'Timer'
 import Tasks from 'Tasks'
 import TaskTracker from 'TaskTracker'
-import { quickStartSelectedTask } from 'quickStartSelectedTask'
 
 export default class PomodoroTimerPlugin extends Plugin {
-    private settingTab?: PomodoroSettings
+	private settingTab?: PomodoroSettings
 
-    public timer?: Timer
+	public timer?: Timer
 
-    public tasks?: Tasks
+	public tasks?: Tasks
 
-    public tracker?: TaskTracker
+	public tracker?: TaskTracker
 
-    async onload() {
-        const settings = await this.loadData()
-        this.settingTab = new PomodoroSettings(this, settings)
-        this.addSettingTab(this.settingTab)
-        this.tracker = new TaskTracker(this)
-        this.timer = new Timer(this)
-        this.tasks = new Tasks(this)
+	async onload() {
+		const settings = await this.loadData()
+		this.settingTab = new PomodoroSettings(this, settings)
+		this.addSettingTab(this.settingTab)
+		this.tracker = new TaskTracker(this)
+		this.timer = new Timer(this)
+		this.tasks = new Tasks(this)
 
-        this.registerView(VIEW_TYPE_TIMER, (leaf) => new TimerView(this, leaf))
+		this.registerView(VIEW_TYPE_TIMER, (leaf) => new TimerView(this, leaf))
 
-        // ribbon
-        this.addRibbonIcon('timer', 'Toggle timer panel', () => {
-            let { workspace } = this.app
-            let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
-            if (leaves.length > 0) {
-                workspace.detachLeavesOfType(VIEW_TYPE_TIMER)
-            } else {
-                this.activateView()
-            }
-        })
-
-        // status bar
-        const status = this.addStatusBarItem()
-        status.className = `${status.className} mod-clickable`
-        new StatusBar({ target: status, props: { store: this.timer } })
-
-        // commands
-        this.addCommand({
-            id: 'toggle-timer',
-            name: 'Toggle timer',
-            callback: () => {
-                this.timer?.toggleTimer()
-            },
-        })
-
-        this.addCommand({
-            id: 'toggle-timer-panel',
-            name: 'Toggle timer panel',
-            callback: () => {
-                let { workspace } = this.app
-                let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
-                if (leaves.length > 0) {
-                    workspace.detachLeavesOfType(VIEW_TYPE_TIMER)
-                } else {
-                    this.activateView()
-                }
-            },
-        })
-
-        this.addCommand({
-            id: 'reset-timer',
-            name: 'Reset timer',
-            callback: () => {
-                this.timer?.reset()
-                new Notice('Timer reset')
-            },
-        })
-
-        this.addCommand({
-            id: 'toggle-mode',
-            name: 'Toggle timer mode',
-            callback: () => {
-                this.timer?.toggleMode((t) => {
-                    new Notice(`Timer mode: ${t.mode}`)
-                })
-            },
-        })
-
-        this.addCommand({
-            id: 'quick-start-selected-task',
-            name: 'Quick Start Selected Task',
-			editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
-				quickStartSelectedTask(editor, view, this.tracker, this.timer, this.tasks);
+		// ribbon
+		this.addRibbonIcon('timer', 'Toggle timer panel', () => {
+			let { workspace } = this.app
+			let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
+			if (leaves.length > 0) {
+				workspace.detachLeavesOfType(VIEW_TYPE_TIMER)
+			} else {
+				this.activateView()
 			}
-        })
-    }
+		})
+
+		// status bar
+		const status = this.addStatusBarItem()
+		status.className = `${status.className} mod-clickable`
+		new StatusBar({ target: status, props: { store: this.timer } })
+
+		// commands
+		this.addCommand({
+			id: 'toggle-timer',
+			name: 'Toggle timer',
+			callback: () => {
+				this.timer?.toggleTimer()
+			},
+		})
+
+		this.addCommand({
+			id: 'toggle-timer-panel',
+			name: 'Toggle timer panel',
+			callback: () => {
+				let { workspace } = this.app
+				let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
+				if (leaves.length > 0) {
+					workspace.detachLeavesOfType(VIEW_TYPE_TIMER)
+				} else {
+					this.activateView()
+				}
+			},
+		})
+
+		this.addCommand({
+			id: 'reset-timer',
+			name: 'Reset timer',
+			callback: () => {
+				this.timer?.reset()
+				new Notice('Timer reset')
+			},
+		})
+
+		this.addCommand({
+			id: 'toggle-mode',
+			name: 'Toggle timer mode',
+			callback: () => {
+				this.timer?.toggleMode((t) => {
+					new Notice(`Timer mode: ${t.mode}`)
+				})
+			},
+		})
+
+		this.addCommand({
+			id: 'quick-start-selected-task',
+			name: 'Quick Start Selected Task',
+			editorCallback: (editor: Editor, _view: MarkdownView | MarkdownFileInfo) => {
+				this.timer?.reset()
+				this.tracker?.setToCurrentFile()
+				let currentTask = this.tasks?.getTaskItemByLine(editor.getCursor().line)
+				if (currentTask) {
+					this.tracker?.active(currentTask)
+					this.tracker?.togglePinned()
+					this.timer?.start()
+				}
+			}
+		})
+	}
 
 
-    public getSettings(): Settings {
-        return (
-            this.settingTab?.getSettings() || PomodoroSettings.DEFAULT_SETTINGS
-        )
-    }
+	public getSettings(): Settings {
+		return (
+			this.settingTab?.getSettings() || PomodoroSettings.DEFAULT_SETTINGS
+		)
+	}
 
-    onunload() {
-        this.settingTab?.unload()
-        this.timer?.destroy()
-        this.tasks?.destroy()
-        this.tracker?.destory()
-    }
-    async activateView() {
-        let { workspace } = this.app
+	onunload() {
+		this.settingTab?.unload()
+		this.timer?.destroy()
+		this.tasks?.destroy()
+		this.tracker?.destory()
+	}
+	async activateView() {
+		let { workspace } = this.app
 
-        let leaf: WorkspaceLeaf | null = null
-        let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
+		let leaf: WorkspaceLeaf | null = null
+		let leaves = workspace.getLeavesOfType(VIEW_TYPE_TIMER)
 
-        if (leaves.length > 0) {
-            leaf = leaves[0]
-        } else {
-            leaf = workspace.getRightLeaf(false)
-            await leaf.setViewState({
-                type: VIEW_TYPE_TIMER,
-                active: true,
-            })
-        }
+		if (leaves.length > 0) {
+			leaf = leaves[0]
+		} else {
+			leaf = workspace.getRightLeaf(false)
+			await leaf.setViewState({
+				type: VIEW_TYPE_TIMER,
+				active: true,
+			})
+		}
 
-        workspace.revealLeaf(leaf)
-    }
+		workspace.revealLeaf(leaf)
+	}
 }
