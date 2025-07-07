@@ -1,19 +1,51 @@
 {
-    "extends": "@tsconfig/svelte/tsconfig.json",
-    "compilerOptions": {
-        "types": ["svelte", "node"],
-        "baseUrl": "./src",
-        "inlineSources": true,
-        "module": "ESNext",
-        "target": "ES6",
-        "esModuleInterop": false,
-        "allowJs": true,
-        "noImplicitAny": true,
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "isolatedModules": true,
-        "strictNullChecks": true,
-        "lib": ["DOM", "ES5", "ES6", "ES7", "webworker"]
-    },
-    "include": ["**/*.ts"]
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"compilerOptions": {
+		"types": [
+			"svelte",
+			"node"
+		],
+		"baseUrl": "./src",
+		"paths": {
+			"@components/*": [
+				"components/*"
+			],
+			"@serializers/*": [
+				"serializers/*"
+			],
+			"@serializers": [
+				"serializers/index.ts"
+			],
+			"@svelte/*": [
+				"svelte/*"
+			],
+			"@utils/*": [
+				"utils/*"
+			],
+			"@utils": [
+				"utils/index.ts"
+			],
+		},
+		"inlineSources": true,
+		"module": "ESNext",
+		"target": "ES6",
+		"esModuleInterop": false,
+		"allowJs": true,
+		"noImplicitAny": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"isolatedModules": true,
+		"strictNullChecks": true,
+		"lib": [
+			"DOM",
+			"ES5",
+			"ES6",
+			"ES7",
+			"webworker"
+		]
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.svelte"
+	]
 }
