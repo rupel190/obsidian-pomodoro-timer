@@ -1,7 +1,7 @@
-import type { TaskFormat } from 'Settings'
-import { DataviewTaskSerializer } from './DataviewTaskSerializer'
-import { DefaultTaskSerializer, DEFAULT_SYMBOLS } from './DefaultTaskSerializer'
 import type { Moment } from 'moment'
+import type { TaskFormat } from '@components/Settings'
+import { DataviewTaskSerializer } from '@serializers/DataviewTaskSerializer'
+import { DefaultTaskSerializer, DEFAULT_SYMBOLS } from '@serializers/DefaultTaskSerializer'
 /**
  * A subset of fields of {@link Task} that can be parsed from the textual
  * description of that Task.
@@ -9,17 +9,17 @@ import type { Moment } from 'moment'
  * All fields are writeable for convenience.
  */
 export type TaskDetails = {
-    description: string
-    priority: string
-    startDate: Moment | null
-    createdDate: Moment | null
-    scheduledDate: Moment | null
-    dueDate: Moment | null
-    doneDate: Moment | null
-    cancelledDate: Moment | null
-    recurrenceRule: string
-    pomodoros: string
-    tags: string[]
+	description: string
+	priority: string
+	startDate: Moment | null
+	createdDate: Moment | null
+	scheduledDate: Moment | null
+	dueDate: Moment | null
+	doneDate: Moment | null
+	cancelledDate: Moment | null
+	recurrenceRule: string
+	pomodoros: string
+	tags: string[]
 }
 
 /**
@@ -40,23 +40,23 @@ export type TaskDetails = {
  * @interface TaskSerializer
  */
 export interface TaskDeserializer {
-    /**
-     * Parses task details from the string representation of a task
-     *
-     * @param line The single line of text to parse
-     * @returns {TaskDetails} Details parsed from {@link line}
-     */
-    deserialize(line: string): TaskDetails
+	/**
+	 * Parses task details from the string representation of a task
+	 *
+	 * @param line The single line of text to parse
+	 * @returns {TaskDetails} Details parsed from {@link line}
+	 */
+	deserialize(line: string): TaskDetails
 }
 
 export { DefaultTaskSerializer, DEFAULT_SYMBOLS } from './DefaultTaskSerializer'
 export { DataviewTaskSerializer } from './DataviewTaskSerializer'
 
 export const POMODORO_REGEX = new RegExp(
-    '(?:(?=[^\\]]+\\])\\[|(?=[^)]+\\))\\() *🍅:: *(\\d* *\\/? *\\d*) *[)\\]](?: *,)?',
+	'(?:(?=[^\\]]+\\])\\[|(?=[^)]+\\))\\() *🍅:: *(\\d* *\\/? *\\d*) *[)\\]](?: *,)?',
 )
 
 export const DESERIALIZERS: Record<TaskFormat, TaskDeserializer> = {
-    TASKS: new DefaultTaskSerializer(DEFAULT_SYMBOLS),
-    DATAVIEW: new DataviewTaskSerializer(),
+	TASKS: new DefaultTaskSerializer(DEFAULT_SYMBOLS),
+	DATAVIEW: new DataviewTaskSerializer(),
 }

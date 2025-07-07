@@ -1,7 +1,8 @@
 <script lang="ts">
 import { settings } from 'stores'
 import { setTooltip, Menu } from 'obsidian'
-import Timer, { type Mode } from 'Timer'
+
+import Timer, { type Mode } from '@components/Timer'
 
 export let store: Timer
 let statusbar: HTMLElement
@@ -83,8 +84,7 @@ setTooltip
         on:click={toggleTimer}
         class="st-timer"
         bind:this={statusbar}
-        on:contextmenu={ctxMenu}
-    >
+        on:contextmenu={ctxMenu}>
         <span style="margin-right:3px" class="item-icon">
             {#if $store.running}
                 <svg
@@ -102,9 +102,7 @@ setTooltip
                         x1="12"
                         x2="15"
                         y1="14"
-                        y2="11"
-                    /><circle cx="12" cy="14" r="8" /></svg
-                >
+                        y2="11" /><circle cx="12" cy="14" r="8" /></svg>
             {:else}
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -118,11 +116,9 @@ setTooltip
                     stroke-linejoin="round"
                     class="lucide lucide-timer-off"
                     ><path d="M10 2h4" /><path
-                        d="M4.6 11a8 8 0 0 0 1.7 8.7 8 8 0 0 0 8.7 1.7"
-                    /><path
-                        d="M7.4 7.4a8 8 0 0 1 10.3 1 8 8 0 0 1 .9 10.2"
-                    /><path d="m2 2 20 20" /><path d="M12 12v-2" /></svg
-                >
+                        d="M4.6 11a8 8 0 0 0 1.7 8.7 8 8 0 0 0 8.7 1.7" /><path
+                        d="M7.4 7.4a8 8 0 0 1 10.3 1 8 8 0 0 1 .9 10.2" /><path
+                        d="m2 2 20 20" /><path d="M12 12v-2" /></svg>
             {/if}
         </span>
         {$store.remained.human}
