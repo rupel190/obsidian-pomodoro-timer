@@ -233,7 +233,7 @@ export default class PomodoroSettings extends PluginSettingTab {
 
 			new Setting(containerEl)
 				.setName('Log section header name')
-				.setDesc('The section name under which log entries are organized (including # signs)')
+				.setDesc('The section name under which log entries are organized (including # signs). Must be in the same file as the task!')
 				.addText((text) => {
 					text.inputEl.style.width = '300px'
 					text.setValue(this._settings.logSectionName)
