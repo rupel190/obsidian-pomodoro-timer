@@ -1,4 +1,5 @@
-import { Notice, Plugin, WorkspaceLeaf } from 'obsidian'
+import { Notice, Plugin, WorkspaceLeaf, Editor, MarkdownView } from 'obsidian'
+import type { MarkdownFileInfo } from 'obsidian'
 import StatusBar from '@svelte/StatusBarComponent.svelte'
 
 import PomodoroSettings, { type Settings } from '@components/Settings'
@@ -83,7 +84,23 @@ export default class PomodoroTimerPlugin extends Plugin {
 				})
 			},
 		})
+
+		this.addCommand({
+			id: 'quick-start-selected-task',
+			name: 'Quick Start Selected Task',
+			editorCallback: (editor: Editor, _view: MarkdownView | MarkdownFileInfo) => {
+				this.timer?.reset()
+				this.tracker?.setToCurrentFile()
+				let currentTask = this.tasks?.getTaskItemByLine(editor.getCursor().line)
+				if (currentTask) {
+					this.tracker?.active(currentTask)
+					this.tracker?.togglePinned()
+					this.timer?.start()
+				}
+			}
+		})
 	}
+
 
 	public getSettings(): Settings {
 		return (

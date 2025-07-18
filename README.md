@@ -15,6 +15,7 @@ A modern Pomodoro timer plugin for Obsidian, now with comment logging and more f
 - **Daily Note Integration**: Log to your daily note or custom templates.
 - **Verbose Metadata Output**: Includes `begin::`, `duration::`, `comment::` and more.
 - **Task Tracking (🍅)**: Auto-increment actual pomodoro count in task metadata.
+- **Quick Start Command**: use the Quick Start Select Task command, which is bindable to a hot key, to select the task, pin it, and start the timer. Any timer that was already running for another task is logged.
 
 ---
 
@@ -23,7 +24,7 @@ A modern Pomodoro timer plugin for Obsidian, now with comment logging and more f
 ### Custom Notification Sound
 
 1. Put the audio file into your vault.
-2. Set its path ralative to the vault's root.
+2. Set its path relative to the vault's root.
    For example: your audio file is in `AudioFiles` and named `notification.mp3`, your path would be `AudioFiles/notification.mp3`.
    **Don't forget the file extension (like `.mp3`, `.wav` etc.).**
 3. Click the `play` button next to the path to verify the audio

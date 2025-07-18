@@ -135,6 +135,10 @@ export default class Tasks implements Readable<TaskStore> {
 		}
 	}
 
+	public getTaskItemByLine(taskLine: number) {
+		return this.state.list.find((taskItem => taskItem.line === taskLine))
+	}
+
 	public clearTasks() {
 		this._store.update(() => ({
 			list: [],

@@ -49,28 +49,16 @@ export default class TaskTracker implements TaskTrackerStore {
 		plugin.registerEvent(
 			//loadtasks on file change
 			plugin.app.workspace.on('active-leaf-change', () => {
-				let file = this.plugin.app.workspace.getActiveFile()
 				if (!this.state.pinned) {
-					this.store.update((state) => {
-						if (state.file?.path !== file?.path) {
-							state.task = undefined
-						}
-						state.file = file ?? state.file
-						return state
-					})
+					this.setToCurrentFile()
 				}
 			}),
 		)
 
 		plugin.app.workspace.onLayoutReady(() => {
-			let file = this.plugin.app.workspace.getActiveFile()
-			this.store.update((state) => {
-				state.file = file ?? state.file
-				return state
-			})
+			this.setToCurrentFile()
 		})
 	}
-
 	get task() {
 		return this.state.task
 	}
@@ -83,19 +71,21 @@ export default class TaskTracker implements TaskTrackerStore {
 		return this.state.comment
 	}
 
-	public togglePinned() {
+	public setFile(file: TFile) {
 		this.store.update((state) => {
-			state.pinned = !state.pinned
+			if (state.file?.path !== file?.path) {
+				state.task = undefined
+			}
+			state.file = file ?? state.file
 			return state
 		})
 	}
 
-	public async active(task: TaskItem) {
-		await this.ensureBlockId(task)
-		this.store.update((state) => {
-			state.task = task
-			return state
-		})
+	public setToCurrentFile() {
+		let file = this.plugin.app.workspace.getActiveFile()
+		if (file) {
+			this.setFile(file)
+		}
 	}
 
 	public setTaskName(name: string) {
@@ -110,6 +100,21 @@ export default class TaskTracker implements TaskTrackerStore {
 	public setComment(comment: string) {
 		this.store.update((state) => {
 			state.comment = comment
+			return state
+		})
+	}
+
+	public togglePinned() {
+		this.store.update((state) => {
+			state.pinned = !state.pinned
+			return state
+		})
+	}
+
+	public async active(task: TaskItem) {
+		await this.ensureBlockId(task)
+		this.store.update((state) => {
+			state.task = task
 			return state
 		})
 	}
