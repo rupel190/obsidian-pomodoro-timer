@@ -77,6 +77,8 @@ export default class Tasks implements Readable<TaskStore> {
 
 		this.subscribe = this._store.subscribe
 
+
+		// TODO: File switching and setting task happens here - avoid setting the task empty (Always except if user removes! Better to keep feature tho, so an empty task wouldn't result in buggin)
 		this.plugin.registerEvent(
 			plugin.app.metadataCache.on(
 				'changed',

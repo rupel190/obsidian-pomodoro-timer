@@ -14,9 +14,7 @@ const r = (content: string, el: HTMLElement) => {
     render(content, el)
 }
 
-let status = ''
-let query = ''
-
+// TODO: Hook into event where the actual task name was changed and trigger an immediate reload
 const changeTaskName = (e: Event) => {
     let target = e.target as HTMLInputElement
     tracker.setTaskName(target.value)
@@ -29,16 +27,6 @@ const removeTask = () => {
 const changeComment = (e: Event) => {
     let target = e.target as HTMLInputElement
     tracker.setComment(target.value)
-}
-
-const progress = (item: TaskItem) => {
-    if (!$settings.showTaskProgress) {
-        return 0
-    }
-    if (item.expected > 0 && item.actual >= 0) {
-        return ((item.actual / item.expected) * 100).toFixed(2)
-    }
-    return 0
 }
 
 const openFile = (e: MouseEvent) => {

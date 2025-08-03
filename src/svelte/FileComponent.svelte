@@ -33,6 +33,7 @@ $: filtered = $tasks
       })
     : []
 
+// TODO: Low prio: Trigger when Task is not pinned and is selected in the editor (versus the task usually only being changeable from the list). I.e. "Allow task switching per editor selection". Probably sucks to implement tho.
 const activeTask = (task: TaskItem) => {
     tracker.active(task)
 }
@@ -55,6 +56,7 @@ const openFile = (e: MouseEvent) => {
     tracker.openFile(e)
 }
 
+// Right-click on task
 const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     const menu = new Menu()
     menu.addItem((item) => {
