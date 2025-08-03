@@ -114,7 +114,93 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 {#if $tracker.file}
     <div class="pomodoro-tasks-wrapper">
         <div class="pomodoro-tasks-header">
-            <div class="pomodoro-tasks-header-title">
+            <div class="pomodoro-tasks-left" on:click={togglePinned}>
+                <span class="pomodoro-tasks-pin">
+                    {#if !$tracker.pinned}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-pin"
+                            ><line x1="12" x2="12" y1="17" y2="22" /><path
+                                d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" /></svg>
+                    {:else}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-pin-off"
+                            ><line x1="2" x2="22" y1="2" y2="22" /><line
+                                x1="12"
+                                x2="12"
+                                y1="17"
+                                y2="22" /><path
+                                d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h12" /><path
+                                d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89" /></svg>
+                    {/if}
+                </span>
+                <span class="pomodoro-tasks-header-label">Task</span>
+            </div>
+            <div class="pomodoro-tasks-right">
+                <span class="pomodoro-tasks-file-name" on:click={openFile}>
+                    {$tracker.file.name}
+                </span>
+            </div>
+        </div>
+
+        {#if $tasks.list.length > 0}
+            <div class="pomodoro-tasks-active">
+                {#if $tracker.task}
+                    <div class="pomodoro-tasks-item">
+                        <div class="pomodoro-tasks-name-row">
+                            <input
+                                type="text"
+                                value={$tracker.task?.name}
+                                on:input={changeTaskName} />
+                            <span
+                                class="pomodoro-tasks-remove"
+                                on:click={removeTask}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-x"
+                                    ><path d="M18 6 6 18" /><path
+                                        d="m6 6 12 12" /></svg>
+                            </span>
+                        </div>
+                        <input
+                            class="pomodoro-comment-input"
+                            type="text"
+                            placeholder="Session comment..."
+                            value={$tracker.comment}
+                            on:input={changeComment} />
+                    </div>
+                {/if}
+            </div>
+        {/if}
+    </div>
+    <div class="pomodoro-tasks-wrapper">
+        <div class="pomodoro-tasks-header">
+            <div class="pomodoro-tasks-left">
                 <span class="pomodoro-tasks-pin" on:click={togglePinned}>
                     {#if !$tracker.pinned}
                         <svg
@@ -151,76 +237,44 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                                 d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89" /></svg>
                     {/if}
                 </span>
+                <span class="pomodoro-tasks-header-label">File</span>
+            </div>
+            <div class="pomodoro-tasks-right">
                 <span class="pomodoro-tasks-file-name" on:click={openFile}>
                     {$tracker.file.name}
                 </span>
+            </div>
+        </div>
+
+        {#if $tasks.list.length > 0}
+            <div class="pomodoro-tasks-toolbar">
+                <div class="pomodoro-tasks-filters">
+                    <span
+                        on:click={() => (status = '')}
+                        class="pomodoro-tasks-filter {status === ''
+                            ? 'filter-active'
+                            : ''}">All</span>
+                    <span
+                        on:click={() => (status = 'todo')}
+                        class="pomodoro-tasks-filter {status === 'todo'
+                            ? 'filter-active'
+                            : ''}">Todo</span>
+                    <span
+                        on:click={() => (status = 'completed')}
+                        class="pomodoro-tasks-filter {status === 'completed'
+                            ? 'filter-active'
+                            : ''}">Completed</span>
+                </div>
                 <span class="pomodoro-tasks-count">
                     {filtered.length} tasks
                 </span>
             </div>
-            {#if $tasks.list.length > 0}
-                <div class="pomodoro-tasks-active">
-                    {#if $tracker.task}
-                        <div class="pomodoro-tasks-item">
-                            <div class="pomodoro-tasks-name-row">
-                                <input
-                                    type="text"
-                                    value={$tracker.task?.name}
-                                    on:input={changeTaskName} />
-                                <span
-                                    class="pomodoro-tasks-remove"
-                                    on:click={removeTask}>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="12"
-                                        height="12"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-x"
-                                        ><path d="M18 6 6 18" /><path
-                                            d="m6 6 12 12" /></svg>
-                                </span>
-                            </div>
-                            <input
-                                class="pomodoro-comment-input"
-                                type="text"
-                                placeholder="Session comment..."
-                                value={$tracker.comment}
-                                on:input={changeComment} />
-                        </div>
-                    {/if}
-                </div>
-                <div class="pomodoro-tasks-toolbar">
-                    <div class="pomodoro-tasks-filters">
-                        <span
-                            on:click={() => (status = '')}
-                            class="pomodoro-tasks-filter {status === ''
-                                ? 'filter-active'
-                                : ''}">All</span>
-                        <span
-                            on:click={() => (status = 'todo')}
-                            class="pomodoro-tasks-filter {status === 'todo'
-                                ? 'filter-active'
-                                : ''}">Todo</span>
-                        <span
-                            on:click={() => (status = 'completed')}
-                            class="pomodoro-tasks-filter {status === 'completed'
-                                ? 'filter-active'
-                                : ''}">Completed</span>
-                    </div>
-                </div>
-                <div class="pomodoro-tasks-text-filter">
-                    <input
-                        type="text"
-                        bind:value={query}
-                        placeholder="Search..." />
-                </div>
-            {/if}
-        </div>
+
+            <div class="pomodoro-tasks-text-filter">
+                <input type="text" bind:value={query} placeholder="Search..." />
+            </div>
+        {/if}
+
         {#if filtered.length > 0}
             <div class="pomodoro-tasks-list">
                 {#each filtered as item}
@@ -282,32 +336,58 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     width: 100%;
     border: 1px solid var(--background-modifier-border);
     border-radius: 5px;
+    margin-bottom: 2.5rem;
 }
 
-.pomodoro-tasks-header-title {
-    width: 100%;
-    background-color: var(--background-modifier-active-hover);
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
+.pomodoro-tasks-header {
     display: flex;
+    align-items: stretch; /* stretch children vertically */
     justify-content: space-between;
-    align-items: flex-end;
+    height: 100%;
+    background-color: var(--background-modifier-active-hover);
 }
 
-.pomodoro-tasks-header-title .pomodoro-tasks-file-name {
-    flex: 1;
-    text-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-right: 5px;
+.pomodoro-tasks-left,
+.pomodoro-tasks-right {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0.4rem;
+}
+
+.pomodoro-tasks-left {
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem; /* Larger click area */
+}
+
+.pomodoro-tasks-right {
+    padding: 0rem 1rem 0rem 1.5rem; /* Larger click area */
+}
+
+.pomodoro-tasks-left:hover,
+.pomodoro-tasks-right:hover {
+    background-color: rgba(255, 255, 255, 0.02); /* Optional hover feedback */
+    border-radius: 5px;
+}
+
+.pomodoro-tasks-header-label {
+    font-size: 1.1rem;
+    padding-right: 1.4rem;
+    letter-spacing: 0rem;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .pomodoro-tasks-file-name {
+    margin-left: auto; /* push to the right */
+    min-width: 0; /* allow ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-style: italic;
     cursor: pointer;
 }
 
-.pomodoro-tasks-header-title .pomodoro-tasks-count {
+.pomodoro-tasks-header .pomodoro-tasks-count {
     width: 50px;
 }
 
@@ -328,15 +408,17 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 .pomodoro-tasks-list .pomodoro-tasks-item {
     cursor: pointer;
 }
-
 .pomodoro-tasks-toolbar {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .pomodoro-tasks-count {
     color: var(--text-faint);
     font-size: 0.8rem;
     text-wrap: nowrap;
+    padding-right: 1rem;
 }
 .pomodoro-tasks-filters {
     padding: 0.5rem 1rem;
