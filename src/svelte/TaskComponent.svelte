@@ -5,6 +5,7 @@ import { settings } from 'stores'
 import TaskItemComponent from '@svelte/TaskItemComponent.svelte'
 import type TaskTracker from '@components/TaskTracker'
 import Tasks, { type TaskItem } from '@components/Tasks'
+import { extractProgressText } from '@utils/utils'
 
 export let tasks: Tasks
 export let tracker: TaskTracker
@@ -38,35 +39,6 @@ const progress = (item: TaskItem) => {
         return ((item.actual / item.expected) * 100).toFixed(2)
     }
     return 0
-}
-
-const progressText = (item: TaskItem) => {
-    let { actual, expected } = item
-    if (expected > 0) {
-        let unfinished = expected - actual
-        let max = Math.max(expected, actual)
-        if (max > 10) {
-            if (unfinished > 0) {
-                return `◌ x ${unfinished} 🍅 x ${actual}`
-            } else {
-                return `🍅 x ${expected}  🥫 x ${Math.abs(unfinished)}`
-            }
-        } else {
-            if (unfinished > 0) {
-                return `${'🍅'.repeat(actual)}${'◌'.repeat(unfinished)}`
-            } else {
-                return `${'🍅'.repeat(expected)}${'🥫'.repeat(
-                    Math.abs(unfinished),
-                )}`
-            }
-        }
-    } else {
-        return actual > 10
-            ? `🍅 x ${actual}`
-            : actual > 0
-              ? `${'🍅'.repeat(actual)}`
-              : `- -`
-    }
 }
 
 const openFile = (e: MouseEvent) => {
@@ -121,7 +93,7 @@ const openFile = (e: MouseEvent) => {
                             value={$tracker.comment}
                             on:input={changeComment} />
                         <div class="pomodoro-tasks-progress">
-                            {progressText($tracker.task)}
+                            {extractProgressText($tracker.task)}
                         </div>
                     </div>
                 {/if}
