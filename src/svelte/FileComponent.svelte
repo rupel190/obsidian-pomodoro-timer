@@ -40,20 +40,6 @@ const togglePinned = () => {
     tracker.togglePinned()
 }
 
-const changeTaskName = (e: Event) => {
-    let target = e.target as HTMLInputElement
-    tracker.setTaskName(target.value)
-}
-
-const removeTask = () => {
-    tracker.clear()
-}
-
-const changeComment = (e: Event) => {
-    let target = e.target as HTMLInputElement
-    tracker.setComment(target.value)
-}
-
 const progress = (item: TaskItem) => {
     if (!$settings.showTaskProgress) {
         return 0
@@ -100,7 +86,7 @@ const openFile = (e: MouseEvent) => {
 const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     const menu = new Menu()
     menu.addItem((item) => {
-        item.setTitle('Open').onClick(() => {
+        item.setTitle('Goto').onClick(() => {
             tracker.openTask(e, task)
         })
     })
@@ -114,95 +100,9 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 {#if $tracker.file}
     <div class="pomodoro-tasks-wrapper">
         <div class="pomodoro-tasks-header">
-            <div class="pomodoro-tasks-left" on:click={togglePinned}>
-                <span class="pomodoro-tasks-pin">
-                    {#if !$tracker.pinned}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="12"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-pin"
-                            ><line x1="12" x2="12" y1="17" y2="22" /><path
-                                d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" /></svg>
-                    {:else}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="12"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-pin-off"
-                            ><line x1="2" x2="22" y1="2" y2="22" /><line
-                                x1="12"
-                                x2="12"
-                                y1="17"
-                                y2="22" /><path
-                                d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h12" /><path
-                                d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89" /></svg>
-                    {/if}
-                </span>
-                <span class="pomodoro-tasks-header-label">Task</span>
-            </div>
-            <div class="pomodoro-tasks-right">
-                <span class="pomodoro-tasks-file-name" on:click={openFile}>
-                    {$tracker.file.name}
-                </span>
-            </div>
-        </div>
-
-        {#if $tasks.list.length > 0}
-            <div class="pomodoro-tasks-active">
-                {#if $tracker.task}
-                    <div class="pomodoro-tasks-item">
-                        <div class="pomodoro-tasks-name-row">
-                            <input
-                                type="text"
-                                value={$tracker.task?.name}
-                                on:input={changeTaskName} />
-                            <span
-                                class="pomodoro-tasks-remove"
-                                on:click={removeTask}>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="lucide lucide-x"
-                                    ><path d="M18 6 6 18" /><path
-                                        d="m6 6 12 12" /></svg>
-                            </span>
-                        </div>
-                        <input
-                            class="pomodoro-comment-input"
-                            type="text"
-                            placeholder="Session comment..."
-                            value={$tracker.comment}
-                            on:input={changeComment} />
-                    </div>
-                {/if}
-            </div>
-        {/if}
-    </div>
-    <div class="pomodoro-tasks-wrapper">
-        <div class="pomodoro-tasks-header">
             <div class="pomodoro-tasks-left">
                 <span class="pomodoro-tasks-pin" on:click={togglePinned}>
-                    {#if !$tracker.pinned}
+                    {#if !$tracker.filePinned}
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="12"

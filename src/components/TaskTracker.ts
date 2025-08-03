@@ -13,14 +13,14 @@ import { extractTaskComponents } from '@utils/utils'
 export type TaskTrackerState = {
 	task?: TaskItem
 	file?: TFile
-	pinned: boolean
+	filePinned: boolean
 	comment: string
 }
 
 type TaskTrackerStore = Readable<TaskTrackerState>
 
 const DEFAULT_TRACKER_STATE: TaskTrackerState = {
-	pinned: false,
+	filePinned: false,
 	comment: ''
 }
 
@@ -49,7 +49,7 @@ export default class TaskTracker implements TaskTrackerStore {
 		plugin.registerEvent(
 			//loadtasks on file change
 			plugin.app.workspace.on('active-leaf-change', () => {
-				if (!this.state.pinned) {
+				if (!this.state.filePinned) {
 					this.setToCurrentFile()
 				}
 			}),
@@ -88,6 +88,7 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
+	// TODO:  Currently it just updates the tracker name, nothing else. -> Update the name in the tracker based on the file.
 	public setTaskName(name: string) {
 		this.store.update((state) => {
 			if (state.task) {
@@ -106,7 +107,7 @@ export default class TaskTracker implements TaskTrackerStore {
 
 	public togglePinned() {
 		this.store.update((state) => {
-			state.pinned = !state.pinned
+			state.filePinned = !state.filePinned
 			return state
 		})
 	}
@@ -178,7 +179,7 @@ export default class TaskTracker implements TaskTrackerStore {
 	}
 
 	get pinned() {
-		return this.state.pinned
+		return this.state.filePinned
 	}
 
 	public finish() { }
