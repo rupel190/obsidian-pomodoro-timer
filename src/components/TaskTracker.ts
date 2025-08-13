@@ -74,7 +74,8 @@ export default class TaskTracker implements TaskTrackerStore {
 	public setFile(file: TFile) {
 		this.store.update((state) => {
 			if (state.file?.path !== file?.path) {
-				state.task = undefined
+				// Don't affect task when changing file
+				// state.task = undefined
 			}
 			state.file = file ?? state.file
 			return state
@@ -153,6 +154,7 @@ export default class TaskTracker implements TaskTrackerStore {
 	}
 
 	public clear() {
+		console.log("clearing task tracker")
 		this.store.update((state) => {
 			state.task = undefined
 			return state
@@ -168,7 +170,11 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
-	public openTask = (event: MouseEvent, task: TaskItem) => {
+	public openTask = (event: MouseEvent, task?: TaskItem) => {
+		if (!task) {
+			console.log("task to open not found")
+			return
+		}
 		let file = this.plugin.app.vault.getAbstractFileByPath(task.path)
 		if (file && file instanceof TFile && task.line >= 0) {
 			const leaf = this.plugin.app.workspace.getLeaf(

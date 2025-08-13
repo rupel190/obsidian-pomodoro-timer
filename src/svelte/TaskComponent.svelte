@@ -1,8 +1,4 @@
 <script lang="ts">
-import { Menu } from 'obsidian'
-import { settings } from 'stores'
-
-import TaskItemComponent from '@svelte/TaskItemComponent.svelte'
 import type TaskTracker from '@components/TaskTracker'
 import Tasks, { type TaskItem } from '@components/Tasks'
 import { extractProgressText } from '@utils/utils'
@@ -15,10 +11,10 @@ const r = (content: string, el: HTMLElement) => {
 }
 
 // TODO: Hook into event where the actual task name was changed and trigger an immediate reload
-const changeTaskName = (e: Event) => {
-    let target = e.target as HTMLInputElement
-    tracker.setTaskName(target.value)
-}
+// const changeTaskName = (e: Event) => {
+//     let target = e.target as HTMLInputElement
+//     tracker.setTaskName(target.value)
+// }
 
 const removeTask = () => {
     tracker.clear()
@@ -29,190 +25,87 @@ const changeComment = (e: Event) => {
     tracker.setComment(target.value)
 }
 
-const openFile = (e: MouseEvent) => {
-    tracker.openFile(e)
+// const openFile = (e: MouseEvent) => {
+//     tracker.openFile(e)
+// }
+
+const openTask = (e: MouseEvent) => {
+    tracker.openTask(e, tracker.task)
 }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 
-{#if $tracker.file}
+<!-- <span> -->
+<!--     {$tracker.task} -->
+<!-- </span> -->
+
+{#if $tracker.task}
     <div class="pomodoro-tasks-wrapper">
         <div class="pomodoro-tasks-header">
-            <span class="pomodoro-tasks-header-label">Task</span>
+            <div class="pomodoro-tasks-left">
+                <span class="pomodoro-tasks-header-label">Task</span>
+            </div>
             <div class="pomodoro-tasks-right">
-                <span class="pomodoro-tasks-file-name" on:click={openFile}>
-                    {$tracker.file.name}
+                <span class="pomodoro-tasks-file-name" on:click={openTask}>
+                    {$tracker.task?.fileName}
                 </span>
             </div>
         </div>
 
-        {#if $tasks.list.length > 0}
-            <div class="pomodoro-tasks-active">
-                {#if $tracker.task}
-                    <div class="pomodoro-tasks-item">
-                        <div class="pomodoro-tasks-name-row">
-                            <span class="pomodoro-task-label">
-                                {$tracker.task?.name}
-                            </span>
-                            <span
-                                class="pomodoro-tasks-remove"
-                                on:click={removeTask}>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="lucide lucide-x"
-                                    ><path d="M18 6 6 18" /><path
-                                        d="m6 6 12 12" /></svg>
-                            </span>
-                        </div>
-                        <input
-                            class="pomodoro-comment-input"
-                            type="text"
-                            placeholder="Session comment..."
-                            value={$tracker.comment}
-                            on:input={changeComment} />
-                        <div class="pomodoro-tasks-progress">
-                            {extractProgressText($tracker.task)}
-                        </div>
+        <div class="pomodoro-tasks-active">
+            {#if $tracker.task}
+                <div class="pomodoro-tasks-item">
+                    <div class="pomodoro-tasks-name-row">
+                        <span class="pomodoro-task-label">
+                            {$tracker.task?.name}
+                        </span>
+                        <span
+                            class="pomodoro-tasks-remove"
+                            on:click={removeTask}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-x"
+                                ><path d="M18 6 6 18" /><path
+                                    d="m6 6 12 12" /></svg>
+                        </span>
                     </div>
-                {/if}
-            </div>
-        {/if}
+                    <input
+                        class="pomodoro-comment-input"
+                        type="text"
+                        placeholder="Session comment..."
+                        value={$tracker.comment}
+                        on:input={changeComment} />
+                    <div class="pomodoro-tasks-progress">
+                        {extractProgressText($tracker.task)}
+                    </div>
+                </div>
+            {/if}
+        </div>
     </div>
 {/if}
 
 <style>
-.pomodoro-tasks-wrapper {
-    width: 100%;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 5px;
-    margin-bottom: 2.5rem;
-}
-
-.pomodoro-tasks-header {
-    display: flex;
-    align-items: stretch; /* stretch children vertically */
-    justify-content: space-between;
-    height: 100%;
-    background-color: var(--background-modifier-active-hover);
-}
-
-.pomodoro-tasks-left,
-.pomodoro-tasks-right {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    margin: 0.4rem;
-}
-
-.pomodoro-tasks-left {
-    padding: 0.5rem 1.5rem 0.5rem 0.5rem; /* Larger click area */
-}
-
-.pomodoro-tasks-right {
-    padding: 0rem 1rem 0rem 1.5rem; /* Larger click area */
-}
-
-.pomodoro-tasks-right:hover {
-    background-color: rgba(255, 255, 255, 0.02); /* Optional hover feedback */
-    border-radius: 5px;
-}
-
-.pomodoro-tasks-header-label {
-    font-size: 1.1rem;
-    padding-right: 1.4rem;
-    letter-spacing: 0rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 0.5rem 1.5rem 0.5rem 1.25rem;
-}
-
-.pomodoro-tasks-file-name {
-    margin-left: auto; /* push to the right */
-    min-width: 0; /* allow ellipsis */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-style: italic;
-    cursor: pointer;
-}
-
-.pomodoro-tasks-header .pomodoro-tasks-count {
-    width: 50px;
-}
-
-.pomodoro-tasks-item {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    display: flex;
-}
-
-.pomodoro-tasks-wrapper input {
-    width: 100%;
-    font-size: 0.8rem;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-}
-
-.pomodoro-tasks-wrapper input:active {
-    border: none;
-    box-shadow: none;
-}
-
-.pomodoro-tasks-wrapper input:focus {
-    border: none;
-    box-shadow: none;
-}
-
-.pomodoro-tasks-name-row svg {
-    margin-right: 5px;
-}
-
-.pomodoro-tasks-name-row svg {
-    color: var(--color-blue);
-}
-
-.pomodoro-tasks-checked .pomodoro-tasks-name-row svg {
-    color: var(--color-green);
-}
-
-.pomodoro-tasks-name-row {
-    width: 100%;
-    display: flex;
-    align-items: baseline;
-}
-
 .pomodoro-comment-input {
-    margin-top: 0.4rem;
+    margin: 1.5rem 2rem 1rem 0rem;
     width: 100%;
     font-size: 0.85rem;
     padding: 0.3rem 0.5rem;
     border-radius: 0.3rem;
-    border: 1px solid var(--background-modifier-border);
     background-color: var(--background-secondary);
     color: var(--text-normal);
 }
 
 .pomodoro-tasks-remove {
     cursor: pointer;
-}
-.pomodoro-tasks-progress {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-align: end;
-    text-wrap: nowrap;
-    overflow: hidden;
 }
 </style>

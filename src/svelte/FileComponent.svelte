@@ -74,8 +74,8 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 {#if $tracker.file}
     <div class="pomodoro-tasks-wrapper">
         <div class="pomodoro-tasks-header">
-            <div class="pomodoro-tasks-left">
-                <span class="pomodoro-tasks-pin" on:click={togglePinned}>
+            <div class="pomodoro-tasks-left" on:click={togglePinned}>
+                <span class="pomodoro-tasks-pin">
                     {#if !$tracker.filePinned}
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -113,8 +113,8 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                 </span>
                 <span class="pomodoro-tasks-header-label">File</span>
             </div>
-            <div class="pomodoro-tasks-right">
-                <span class="pomodoro-tasks-file-name" on:click={openFile}>
+            <div class="pomodoro-tasks-right" on:click={openFile}>
+                <span class="pomodoro-tasks-file-name">
                     {$tracker.file.name}
                 </span>
             </div>
@@ -206,77 +206,9 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 {/if}
 
 <style>
-.pomodoro-tasks-wrapper {
-    width: 100%;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 5px;
-    margin-bottom: 2.5rem;
-}
-
-.pomodoro-tasks-header {
-    display: flex;
-    align-items: stretch; /* stretch children vertically */
-    justify-content: space-between;
-    height: 100%;
-    background-color: var(--background-modifier-active-hover);
-}
-
-.pomodoro-tasks-left,
-.pomodoro-tasks-right {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    margin: 0.4rem;
-}
-
-.pomodoro-tasks-left {
-    padding: 0.5rem 1.5rem 0.5rem 0.5rem; /* Larger click area */
-}
-
-.pomodoro-tasks-right {
-    padding: 0rem 1rem 0rem 1.5rem; /* Larger click area */
-}
-
-.pomodoro-tasks-left:hover,
-.pomodoro-tasks-right:hover {
-    background-color: rgba(255, 255, 255, 0.02); /* Optional hover feedback */
-    border-radius: 5px;
-}
-
-.pomodoro-tasks-header-label {
-    font-size: 1.1rem;
-    padding-right: 1.4rem;
-    letter-spacing: 0rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.pomodoro-tasks-file-name {
-    margin-left: auto; /* push to the right */
-    min-width: 0; /* allow ellipsis */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-style: italic;
-    cursor: pointer;
-}
-
-.pomodoro-tasks-header .pomodoro-tasks-count {
-    width: 50px;
-}
-
-.pomodoro-tasks-list,
-.pomodoro-tasks-active {
+.pomodoro-tasks-list {
     border-top: 1px solid var(--background-modifier-border);
     width: 100%;
-}
-
-.pomodoro-tasks-item {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    display: flex;
 }
 
 .pomodoro-tasks-list .pomodoro-tasks-item {
@@ -303,24 +235,6 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     padding: 0.5rem 0rem;
 }
 
-.pomodoro-tasks-wrapper input {
-    width: 100%;
-    font-size: 0.8rem;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-}
-
-.pomodoro-tasks-wrapper input:active {
-    border: none;
-    box-shadow: none;
-}
-
-.pomodoro-tasks-wrapper input:focus {
-    border: none;
-    box-shadow: none;
-}
-
 .pomodoro-tasks-text-filter input {
     height: 0.8rem;
 }
@@ -331,35 +245,6 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
     border-radius: 10px;
     cursor: pointer;
     color: var(--text-muted);
-}
-
-.pomodoro-tasks-name-row svg {
-    margin-right: 5px;
-}
-
-.pomodoro-tasks-name-row svg {
-    color: var(--color-blue);
-}
-
-.pomodoro-tasks-checked .pomodoro-tasks-name-row svg {
-    color: var(--color-green);
-}
-
-.pomodoro-tasks-name-row {
-    width: 100%;
-    display: flex;
-    align-items: baseline;
-}
-
-.pomodoro-comment-input {
-    margin-top: 0.4rem;
-    width: 100%;
-    font-size: 0.85rem;
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-    border: 1px solid var(--background-modifier-border);
-    background-color: var(--background-secondary);
-    color: var(--text-normal);
 }
 
 .filter-active {
@@ -379,16 +264,5 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
 .pomodoro-tasks-pin {
     cursor: pointer;
     padding-right: 3px;
-}
-
-.pomodoro-tasks-remove {
-    cursor: pointer;
-}
-.pomodoro-tasks-progress {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-align: end;
-    text-wrap: nowrap;
-    overflow: hidden;
 }
 </style>
