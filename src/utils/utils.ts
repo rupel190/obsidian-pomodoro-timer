@@ -4,6 +4,7 @@ import {
 	TaskRegularExpressions,
 	type TaskComponents,
 } from '@serializers/TaskModels'
+import type { TaskItem } from '@components/Tasks'
 
 export {
 	appHasDailyNotesPluginLoaded,
@@ -72,6 +73,35 @@ export function extractTaskComponents(line: string): TaskComponents | null {
 		body = body.replace(TaskRegularExpressions.blockLinkRegex, '').trim()
 	}
 	return { indentation, listMarker, status, body, blockLink }
+}
+
+export function extractProgressText(item: TaskItem) {
+	let { actual, expected } = item
+	if (expected > 0) {
+		let unfinished = expected - actual
+		let max = Math.max(expected, actual)
+		if (max > 10) {
+			if (unfinished > 0) {
+				return `◌ x ${unfinished} 🍅 x ${actual}`
+			} else {
+				return `🍅 x ${expected}  🥫 x ${Math.abs(unfinished)}`
+			}
+		} else {
+			if (unfinished > 0) {
+				return `${'🍅'.repeat(actual)}${'◌'.repeat(unfinished)}`
+			} else {
+				return `${'🍅'.repeat(expected)}${'🥫'.repeat(
+					Math.abs(unfinished),
+				)}`
+			}
+		}
+	} else {
+		return actual > 10
+			? `🍅 x ${actual}`
+			: actual > 0
+				? `${'🍅'.repeat(actual)}`
+				: `- -`
+	}
 }
 
 /**

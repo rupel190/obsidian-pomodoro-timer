@@ -1,9 +1,10 @@
 <script lang="ts">
-import TasksComponent from '@svelte/TasksComponent.svelte'
+import TaskComponent from '@svelte/TaskComponent.svelte'
 import TimerSettingsComponent from '@svelte/TimerSettingsComponent.svelte'
 import type Timer from '@components/Timer'
 import type Tasks from '@components/Tasks'
 import type TaskTracker from '@components/TaskTracker'
+import FileComponent from './FileComponent.svelte'
 
 export let timer: Timer
 export let tasks: Tasks
@@ -192,7 +193,8 @@ const toggleExtra = (value: 'settings' | 'tasks') => {
 
     <div class="pomodoro-extra">
         {#if extra == 'tasks'}
-            <TasksComponent {tasks} {tracker} {render} />
+            <TaskComponent {tasks} {tracker} {render} />
+            <FileComponent {tasks} {tracker} {render} />
         {:else if extra == 'settings'}
             <TimerSettingsComponent />
         {/if}

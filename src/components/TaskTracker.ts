@@ -13,14 +13,14 @@ import { extractTaskComponents } from '@utils/utils'
 export type TaskTrackerState = {
 	task?: TaskItem
 	file?: TFile
-	pinned: boolean
+	filePinned: boolean
 	comment: string
 }
 
 type TaskTrackerStore = Readable<TaskTrackerState>
 
 const DEFAULT_TRACKER_STATE: TaskTrackerState = {
-	pinned: false,
+	filePinned: false,
 	comment: ''
 }
 
@@ -49,7 +49,7 @@ export default class TaskTracker implements TaskTrackerStore {
 		plugin.registerEvent(
 			//loadtasks on file change
 			plugin.app.workspace.on('active-leaf-change', () => {
-				if (!this.state.pinned) {
+				if (!this.state.filePinned) {
 					this.setToCurrentFile()
 				}
 			}),
@@ -74,7 +74,8 @@ export default class TaskTracker implements TaskTrackerStore {
 	public setFile(file: TFile) {
 		this.store.update((state) => {
 			if (state.file?.path !== file?.path) {
-				state.task = undefined
+				// Don't affect task when changing file
+				// state.task = undefined
 			}
 			state.file = file ?? state.file
 			return state
@@ -88,6 +89,7 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
+	// TODO:  Currently it just updates the tracker name, nothing else. -> Update the name in the tracker based on the file.
 	public setTaskName(name: string) {
 		this.store.update((state) => {
 			if (state.task) {
@@ -106,7 +108,7 @@ export default class TaskTracker implements TaskTrackerStore {
 
 	public togglePinned() {
 		this.store.update((state) => {
-			state.pinned = !state.pinned
+			state.filePinned = !state.filePinned
 			return state
 		})
 	}
@@ -152,6 +154,7 @@ export default class TaskTracker implements TaskTrackerStore {
 	}
 
 	public clear() {
+		console.log("clearing task tracker")
 		this.store.update((state) => {
 			state.task = undefined
 			return state
@@ -167,7 +170,11 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
-	public openTask = (event: MouseEvent, task: TaskItem) => {
+	public openTask = (event: MouseEvent, task?: TaskItem) => {
+		if (!task) {
+			console.log("task to open not found")
+			return
+		}
 		let file = this.plugin.app.vault.getAbstractFileByPath(task.path)
 		if (file && file instanceof TFile && task.line >= 0) {
 			const leaf = this.plugin.app.workspace.getLeaf(
@@ -178,7 +185,7 @@ export default class TaskTracker implements TaskTrackerStore {
 	}
 
 	get pinned() {
-		return this.state.pinned
+		return this.state.filePinned
 	}
 
 	public finish() { }
