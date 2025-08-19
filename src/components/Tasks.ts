@@ -30,6 +30,8 @@ export type TaskItem = {
 	line: number
 }
 
+
+
 export type TaskStore = {
 	list: TaskItem[]
 }
@@ -116,6 +118,7 @@ export default class Tasks implements Readable<TaskStore> {
 		)
 	}
 
+
 	public loadFileTasks(file: TFile) {
 		if (file.extension == 'md') {
 			this.plugin.app.vault.cachedRead(file).then((c) => {
@@ -125,6 +128,7 @@ export default class Tasks implements Readable<TaskStore> {
 					c,
 					this.plugin.app.metadataCache.getFileCache(file),
 				)
+
 				this._store.update(() => ({
 					list: tasks,
 				}))

@@ -75,6 +75,7 @@ export function extractTaskComponents(line: string): TaskComponents | null {
 	return { indentation, listMarker, status, body, blockLink }
 }
 
+
 export function extractProgressText(item: TaskItem) {
 	let { actual, expected } = item
 	if (expected > 0) {

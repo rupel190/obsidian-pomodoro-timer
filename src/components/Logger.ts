@@ -60,6 +60,17 @@ export default class Logger {
 		return logFile
 	}
 
+
+
+	// TODO: Fix with all it takes
+	private async updateFileContent(logText: string, fileContent: string, headerPosition: number) {
+		return fileContent.slice(0, headerPosition) + `${logText}\n` + fileContent.slice(headerPosition);
+	}
+
+
+
+
+
 	private async resolveLogFile(ctx: LogContext): Promise<TFile | void> {
 		const settings = this.plugin!.getSettings()
 
