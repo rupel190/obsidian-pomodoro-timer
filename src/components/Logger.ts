@@ -62,7 +62,8 @@ export default class Logger {
 
 
 
-	// TODO: Fix with all it takes
+	// TODO: implement actual logging to the heading
+	// TODO: check what the feature means for templates
 	private async updateFileContent(logText: string, fileContent: string, headerPosition: number) {
 		return fileContent.slice(0, headerPosition) + `${logText}\n` + fileContent.slice(headerPosition);
 	}

@@ -9,7 +9,6 @@ import Tasks, { type TaskItem } from '@components/Tasks'
 import type Files from '@components/Files'
 
 export let tasks: Tasks
-export let file: Files
 export let tracker: TaskTracker
 export let render: (content: string, el: HTMLElement) => void
 const r = (content: string, el: HTMLElement) => {
@@ -113,8 +112,7 @@ const showTaskMenu = (task: TaskItem) => (e: MouseEvent) => {
                                 d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89" /></svg>
                     {/if}
                 </span>
-                <span class="pomodoro-tasks-header-label"
-                    >File {$file?.file}</span>
+                <span class="pomodoro-tasks-header-label">File</span>
             </div>
             <div class="pomodoro-tasks-right" on:click={openFile}>
                 <span class="pomodoro-tasks-file-name">

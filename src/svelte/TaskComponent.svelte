@@ -1,14 +1,18 @@
 <script lang="ts">
 import type TaskTracker from '@components/TaskTracker'
 import Tasks, { type TaskItem } from '@components/Tasks'
+import type Files from '@components/Files'
 import { extractProgressText } from '@utils/utils'
 
 export let tasks: Tasks
+export let files: Files
 export let tracker: TaskTracker
 export let render: (content: string, el: HTMLElement) => void
 const r = (content: string, el: HTMLElement) => {
     render(content, el)
 }
+
+let selectedHeading = ''
 
 // TODO: Hook into event where the actual task name was changed and trigger an immediate reload
 // const changeTaskName = (e: Event) => {
@@ -53,6 +57,20 @@ const openTask = (e: MouseEvent) => {
                 </span>
             </div>
         </div>
+
+        {#if $files?.headings && $files.headings.length > 0}
+            <div class="pomodoro-heading-selector">
+                <label for="heading-select">Log under heading:</label>
+                <select id="heading-select" bind:value={selectedHeading}>
+                    <option value="">Default</option>
+                    {#each $files.headings as heading}
+                        <option value={heading.heading}>
+                            {'#'.repeat(heading.level)} {heading.heading}
+                        </option>
+                    {/each}
+                </select>
+            </div>
+        {/if}
 
         <div class="pomodoro-tasks-active">
             {#if $tracker.task}
@@ -107,5 +125,25 @@ const openTask = (e: MouseEvent) => {
 
 .pomodoro-tasks-remove {
     cursor: pointer;
+}
+
+.pomodoro-heading-selector {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.pomodoro-heading-selector label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+}
+
+.pomodoro-heading-selector select {
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    background-color: var(--background-secondary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    font-size: 0.8rem;
 }
 </style>
