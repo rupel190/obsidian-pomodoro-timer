@@ -1,6 +1,6 @@
 import { type TaskItem } from '@components/Tasks'
 import type PomodoroTimerPlugin from 'main'
-import { TFile, Keymap, MarkdownView, type HeadingCache } from 'obsidian'
+import { TFile, Keymap, MarkdownView, type HeadingCache, type CachedMetadata } from 'obsidian'
 import { DESERIALIZERS, POMODORO_REGEX } from 'serializers'
 import {
 	writable,
@@ -13,6 +13,7 @@ import { extractTaskComponents } from '@utils/utils'
 export type TaskTrackerState = {
 	task?: TaskItem
 	file?: TFile
+	availableFileHeadings?: HeadingCache[]
 	fileHeading?: HeadingCache
 	filePinned: boolean
 	comment: string
@@ -191,6 +192,8 @@ export default class TaskTracker implements TaskTrackerStore {
 		console.log("clearing task tracker")
 		this.store.update((state) => {
 			state.task = undefined
+			state.availableFileHeadings = undefined
+			state.fileHeading = undefined
 			return state
 		})
 	}

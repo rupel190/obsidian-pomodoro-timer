@@ -60,6 +60,20 @@ const openTask = (e: MouseEvent) => {
             </div>
         </div>
 
+        {#if $tracker?.availableFileHeadings && $tracker?.availableFileHeadings.length > 0}
+            <div class="pomodoro-heading-selector">
+                <label for="heading-select">Log under heading:</label>
+                <select id="heading-select" bind:value={selectedHeading}>
+                    <option value="">Default</option>
+                    {#each $tracker.availableFileHeadings as heading}
+                        <option value={heading.heading}>
+                            {'#'.repeat(heading.level)} {heading.heading}
+                        </option>
+                    {/each}
+                </select>
+            </div>
+        {/if}
+
         <div class="pomodoro-tasks-active">
             {#if $tracker.task}
                 <div class="pomodoro-tasks-item">
@@ -113,5 +127,25 @@ const openTask = (e: MouseEvent) => {
 
 .pomodoro-tasks-remove {
     cursor: pointer;
+}
+
+.pomodoro-heading-selector {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.pomodoro-heading-selector label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+}
+
+.pomodoro-heading-selector select {
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    background-color: var(--background-secondary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    font-size: 0.8rem;
 }
 </style>
