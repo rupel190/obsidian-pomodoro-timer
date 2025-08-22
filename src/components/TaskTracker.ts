@@ -1,6 +1,6 @@
 import { type TaskItem } from '@components/Tasks'
 import type PomodoroTimerPlugin from 'main'
-import { TFile, Keymap, MarkdownView } from 'obsidian'
+import { TFile, Keymap, MarkdownView, type CachedMetadata, type HeadingCache } from 'obsidian'
 import { DESERIALIZERS, POMODORO_REGEX } from 'serializers'
 import {
 	writable,
@@ -13,6 +13,8 @@ import { extractTaskComponents } from '@utils/utils'
 export type TaskTrackerState = {
 	task?: TaskItem
 	file?: TFile
+	availableFileHeadings?: HeadingCache[]
+	fileHeading?: HeadingCache
 	filePinned: boolean
 	comment: string
 }
@@ -71,11 +73,17 @@ export default class TaskTracker implements TaskTrackerStore {
 		return this.state.comment
 	}
 
+	get fileHeading() {
+		return this.state.fileHeading
+	}
+
+
 	public setFile(file: TFile) {
 		this.store.update((state) => {
 			if (state.file?.path !== file?.path) {
 				// Don't affect task when changing file
 				// state.task = undefined
+				this.readFileHeadings(this.state.file)
 			}
 			state.file = file ?? state.file
 			return state
@@ -89,14 +97,21 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
-	// TODO:  Currently it just updates the tracker name, nothing else. -> Update the name in the tracker based on the file.
-	public setTaskName(name: string) {
-		this.store.update((state) => {
-			if (state.task) {
-				state.task.name = name
-			}
-			return state
-		})
+
+	public readFileHeadings(file?: TFile) {
+		if (file && file.extension == 'md') {
+			this.plugin.app.vault.cachedRead(file).then((c) => {
+				this.state.availableFileHeadings = this.resolveHeadings(c, this.plugin.app.metadataCache.getFileCache(file),
+				)
+			})
+		}
+	}
+
+	private resolveHeadings(content: string, metadata: CachedMetadata | null,): HeadingCache[] {
+		if (!content || !metadata) {
+			return []
+		}
+		return metadata.headings || []
 	}
 
 	public setComment(comment: string) {

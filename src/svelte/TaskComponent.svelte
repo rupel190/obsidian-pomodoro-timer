@@ -1,11 +1,8 @@
 <script lang="ts">
 import type TaskTracker from '@components/TaskTracker'
 import Tasks, { type TaskItem } from '@components/Tasks'
-import type Files from '@components/Files'
 import { extractProgressText } from '@utils/utils'
 
-export let tasks: Tasks
-export let files: Files
 export let tracker: TaskTracker
 export let render: (content: string, el: HTMLElement) => void
 const r = (content: string, el: HTMLElement) => {
@@ -58,14 +55,15 @@ const openTask = (e: MouseEvent) => {
             </div>
         </div>
 
-        {#if $files?.headings && $files.headings.length > 0}
+        {#if $tracker?.availableFileHeadings && $tracker?.availableFileHeadings.length > 0}
             <div class="pomodoro-heading-selector">
                 <label for="heading-select">Log under heading:</label>
                 <select id="heading-select" bind:value={selectedHeading}>
                     <option value="">Default</option>
-                    {#each $files.headings as heading}
+                    {#each $tracker.availableFileHeadings as heading}
                         <option value={heading.heading}>
-                            {'#'.repeat(heading.level)} {heading.heading}
+                            {'#'.repeat(heading.level)}
+                            {heading.heading}
                         </option>
                     {/each}
                 </select>

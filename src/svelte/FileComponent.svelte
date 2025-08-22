@@ -6,7 +6,6 @@ import { extractProgressText } from '@utils/utils'
 import TaskItemComponent from '@svelte/TaskItemComponent.svelte'
 import type TaskTracker from '@components/TaskTracker'
 import Tasks, { type TaskItem } from '@components/Tasks'
-import type Files from '@components/Files'
 
 export let tasks: Tasks
 export let tracker: TaskTracker

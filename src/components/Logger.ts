@@ -3,6 +3,7 @@ import { files, utils } from '@utils'
 import PomodoroTimerPlugin from 'main'
 import { TFile, Notice, moment } from 'obsidian'
 import { type TaskItem } from '@components/Tasks'
+import { type HeadingCache } from 'obsidian'
 
 export type TimerLog = {
 	duration: number
@@ -38,7 +39,7 @@ export type TaskLog = Pick<
 	| 'tags'
 >
 
-export type LogContext = TimerState & { task: TaskItem, comment?: string }
+export type LogContext = TimerState & { task: TaskItem, comment?: string, fileHeading: HeadingCache }
 
 export default class Logger {
 	private plugin: PomodoroTimerPlugin
@@ -61,14 +62,11 @@ export default class Logger {
 	}
 
 
-
 	// TODO: implement actual logging to the heading
 	// TODO: check what the feature means for templates
 	private async updateFileContent(logText: string, fileContent: string, headerPosition: number) {
 		return fileContent.slice(0, headerPosition) + `${logText}\n` + fileContent.slice(headerPosition);
 	}
-
-
 
 
 
