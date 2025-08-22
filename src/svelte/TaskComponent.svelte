@@ -10,6 +10,12 @@ const r = (content: string, el: HTMLElement) => {
     render(content, el)
 }
 
+let selectedHeading = ''
+
+$: if (selectedHeading !== '') {
+    tracker.setFileHeading(selectedHeading)
+}
+
 // TODO: Hook into event where the actual task name was changed and trigger an immediate reload
 // const changeTaskName = (e: Event) => {
 //     let target = e.target as HTMLInputElement

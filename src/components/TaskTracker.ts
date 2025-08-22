@@ -1,6 +1,6 @@
 import { type TaskItem } from '@components/Tasks'
 import type PomodoroTimerPlugin from 'main'
-import { TFile, Keymap, MarkdownView } from 'obsidian'
+import { TFile, Keymap, MarkdownView, type HeadingCache } from 'obsidian'
 import { DESERIALIZERS, POMODORO_REGEX } from 'serializers'
 import {
 	writable,
@@ -13,6 +13,7 @@ import { extractTaskComponents } from '@utils/utils'
 export type TaskTrackerState = {
 	task?: TaskItem
 	file?: TFile
+	fileHeading?: HeadingCache
 	filePinned: boolean
 	comment: string
 }
@@ -99,9 +100,36 @@ export default class TaskTracker implements TaskTrackerStore {
 		})
 	}
 
+	public async readFileHeadings(file?: TFile) {
+		if (file && file.extension == 'md') {
+			const content = await this.plugin.app.vault.cachedRead(file)
+			const headings = this.resolveHeadings(content, this.plugin.app.metadataCache.getFileCache(file))
+
+			this.store.update((state) => {
+				state.availableFileHeadings = headings
+				return state
+			})
+		}
+	}
+
+	private resolveHeadings(content: string, metadata: CachedMetadata | null,): HeadingCache[] {
+		if (!content || !metadata) {
+			return []
+		}
+		return metadata.headings || []
+	}
+
 	public setComment(comment: string) {
 		this.store.update((state) => {
 			state.comment = comment
+			return state
+		})
+	}
+
+	public setFileHeading(headingText: string) {
+		const heading = this.state.availableFileHeadings?.find(h => h.heading === headingText)
+		this.store.update((state) => {
+			state.fileHeading = heading
 			return state
 		})
 	}
@@ -119,6 +147,12 @@ export default class TaskTracker implements TaskTrackerStore {
 			state.task = task
 			return state
 		})
+
+		// Load headings for the task's file
+		let file = this.plugin.app.vault.getAbstractFileByPath(task.path)
+		if (file instanceof TFile) {
+			await this.readFileHeadings(file)
+		}
 	}
 
 	private async ensureBlockId(task: TaskItem) {
