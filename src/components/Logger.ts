@@ -55,13 +55,14 @@ export default class Logger {
 			const logText = await this.toText(log, logFile)
 			console.log('logtext: ', logText)
 			if (logText) {
+				//TODO: generally fix this part
 				if (ctx.heading) {
 					console.log('has heading')
 					const fileContent = await this.plugin.app.vault.read(logFile)
 					const insertPos = ctx.heading.position
-					const updatedContent = fileContent.slice(0, insertPos.end.line)
+					const updatedContent = fileContent.slice(0, insertPos.end.offset) //TODO: fix stale offset?
 						+ `\n${logText}`
-						+ fileContent.slice(insertPos.end.line)
+						+ fileContent.slice(insertPos.end.offset)
 
 					console.log("logfile: ", logFile)
 					console.log(fileContent, insertPos, updatedContent)

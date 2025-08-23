@@ -194,8 +194,8 @@ const toggleExtra = (value: 'settings' | 'tasks') => {
     <div class="pomodoro-extra">
         {#if extra == 'tasks'}
             <!-- <TaskComponent {tasks} {file} {tracker} {render} /> -->
-            <FileComponent {tasks} {tracker} {render} />
             <TaskComponent {tracker} {render} />
+            <FileComponent {tasks} {tracker} {render} />
         {:else if extra == 'settings'}
             <TimerSettingsComponent />
         {/if}
