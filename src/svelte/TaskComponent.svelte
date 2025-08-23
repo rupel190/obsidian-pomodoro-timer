@@ -11,11 +11,9 @@ const r = (content: string, el: HTMLElement) => {
 
 let selectedHeading = ''
 
-// TODO: Hook into event where the actual task name was changed and trigger an immediate reload
-// const changeTaskName = (e: Event) => {
-//     let target = e.target as HTMLInputElement
-//     tracker.setTaskName(target.value)
-// }
+$: if (selectedHeading !== '') {
+    tracker.setFileHeading(selectedHeading)
+}
 
 const removeTask = () => {
     tracker.clear()

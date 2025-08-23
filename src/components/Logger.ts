@@ -1,9 +1,8 @@
 import { type TimerState, type Mode } from 'components/Timer'
 import { files, utils } from '@utils'
 import PomodoroTimerPlugin from 'main'
-import { TFile, Notice, moment } from 'obsidian'
+import { TFile, Notice, moment, type HeadingCache } from 'obsidian'
 import { type TaskItem } from '@components/Tasks'
-import { type HeadingCache } from 'obsidian'
 
 export type TimerLog = {
 	duration: number
@@ -39,7 +38,7 @@ export type TaskLog = Pick<
 	| 'tags'
 >
 
-export type LogContext = TimerState & { task: TaskItem, comment?: string, fileHeading: HeadingCache }
+export type LogContext = TimerState & { task: TaskItem, comment?: string, heading?: HeadingCache }
 
 export default class Logger {
 	private plugin: PomodoroTimerPlugin
@@ -52,22 +51,31 @@ export default class Logger {
 		const logFile = await this.resolveLogFile(ctx)
 		const log = this.createLog(ctx)
 		if (logFile) {
+			console.log('logfile is avail')
 			const logText = await this.toText(log, logFile)
+			console.log('logtext: ', logText)
 			if (logText) {
-				await this.plugin.app.vault.append(logFile, `\n${logText}`)
+				if (ctx.heading) {
+					console.log('has heading')
+					const fileContent = await this.plugin.app.vault.read(logFile)
+					const insertPos = ctx.heading.position
+					const updatedContent = fileContent.slice(0, insertPos.end.line)
+						+ `\n${logText}`
+						+ fileContent.slice(insertPos.end.line)
+
+					console.log("logfile: ", logFile)
+					console.log(fileContent, insertPos, updatedContent)
+
+
+					await this.plugin.app.vault.modify(logFile, updatedContent)
+				} else {
+					await this.plugin.app.vault.append(logFile, `\n${logText}`)
+				}
 			}
 		}
 
 		return logFile
 	}
-
-
-	// TODO: implement actual logging to the heading
-	// TODO: check what the feature means for templates
-	private async updateFileContent(logText: string, fileContent: string, headerPosition: number) {
-		return fileContent.slice(0, headerPosition) + `${logText}\n` + fileContent.slice(headerPosition);
-	}
-
 
 
 	private async resolveLogFile(ctx: LogContext): Promise<TFile | void> {

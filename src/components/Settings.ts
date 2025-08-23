@@ -1,5 +1,4 @@
 import type PomodoroTimerPlugin from 'main'
-import { DropdownComponent } from 'obsidian'
 import { PluginSettingTab, Setting, moment } from 'obsidian'
 import type { Unsubscriber } from 'svelte/motion'
 import { writable, type Writable } from 'svelte/store'

@@ -1,6 +1,6 @@
 import { type TaskItem } from '@components/Tasks'
 import type PomodoroTimerPlugin from 'main'
-import { TFile, Keymap, MarkdownView, type CachedMetadata, type HeadingCache } from 'obsidian'
+import { TFile, Keymap, MarkdownView, type HeadingCache, type CachedMetadata } from 'obsidian'
 import { DESERIALIZERS, POMODORO_REGEX } from 'serializers'
 import {
 	writable,
@@ -97,12 +97,14 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
-
-	public readFileHeadings(file?: TFile) {
+	public async readFileHeadings(file?: TFile) {
 		if (file && file.extension == 'md') {
-			this.plugin.app.vault.cachedRead(file).then((c) => {
-				this.state.availableFileHeadings = this.resolveHeadings(c, this.plugin.app.metadataCache.getFileCache(file),
-				)
+			const content = await this.plugin.app.vault.cachedRead(file)
+			const headings = this.resolveHeadings(content, this.plugin.app.metadataCache.getFileCache(file))
+
+			this.store.update((state) => {
+				state.availableFileHeadings = headings
+				return state
 			})
 		}
 	}
@@ -121,6 +123,14 @@ export default class TaskTracker implements TaskTrackerStore {
 		})
 	}
 
+	public setFileHeading(headingText: string) {
+		const heading = this.state.availableFileHeadings?.find(h => h.heading === headingText)
+		this.store.update((state) => {
+			state.fileHeading = heading
+			return state
+		})
+	}
+
 	public togglePinned() {
 		this.store.update((state) => {
 			state.filePinned = !state.filePinned
@@ -134,6 +144,12 @@ export default class TaskTracker implements TaskTrackerStore {
 			state.task = task
 			return state
 		})
+
+		// Load headings for the task's file
+		let file = this.plugin.app.vault.getAbstractFileByPath(task.path)
+		if (file instanceof TFile) {
+			await this.readFileHeadings(file)
+		}
 	}
 
 	private async ensureBlockId(task: TaskItem) {
@@ -172,6 +188,8 @@ export default class TaskTracker implements TaskTrackerStore {
 		console.log("clearing task tracker")
 		this.store.update((state) => {
 			state.task = undefined
+			state.availableFileHeadings = undefined
+			state.fileHeading = undefined
 			return state
 		})
 	}
