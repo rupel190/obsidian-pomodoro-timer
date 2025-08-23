@@ -91,16 +91,6 @@ export default class TaskTracker implements TaskTrackerStore {
 		}
 	}
 
-	// TODO:  Currently it just updates the tracker name, nothing else. -> Update the name in the tracker based on the file.
-	public setTaskName(name: string) {
-		this.store.update((state) => {
-			if (state.task) {
-				state.task.name = name
-			}
-			return state
-		})
-	}
-
 	public async readFileHeadings(file?: TFile) {
 		if (file && file.extension == 'md') {
 			const content = await this.plugin.app.vault.cachedRead(file)

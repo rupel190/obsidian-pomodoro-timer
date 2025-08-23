@@ -78,12 +78,12 @@ export const getWeeklyNoteFile = async (): Promise<TFile> => {
 	return file
 }
 
-export const appendFile = async (
-	app: App,
-	file: TFile,
-	logText: string,
-): Promise<void> => {
-	await app.vault.append(file, logText)
-}
+// export const appendFile = async (
+// 	app: App,
+// 	file: TFile,
+// 	logText: string,
+// ): Promise<void> => {
+// 	await app.vault.append(file, logText)
+// }
 
 

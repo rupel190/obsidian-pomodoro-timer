@@ -1,8 +1,9 @@
 import { type TimerState, type Mode } from 'components/Timer'
 import { files, utils } from '@utils'
 import PomodoroTimerPlugin from 'main'
-import { TFile, Notice, moment } from 'obsidian'
+import { TFile, Notice, moment, type HeadingCache } from 'obsidian'
 import { type TaskItem } from '@components/Tasks'
+import FileComponent from '@svelte/FileComponent.svelte'
 
 export type TimerLog = {
 	duration: number
@@ -38,7 +39,7 @@ export type TaskLog = Pick<
 	| 'tags'
 >
 
-export type LogContext = TimerState & { task: TaskItem, comment?: string }
+export type LogContext = TimerState & { task: TaskItem, comment?: string, heading?: HeadingCache }
 
 export default class Logger {
 	private plugin: PomodoroTimerPlugin
@@ -53,7 +54,19 @@ export default class Logger {
 		if (logFile) {
 			const logText = await this.toText(log, logFile)
 			if (logText) {
-				await this.plugin.app.vault.append(logFile, `\n${logText}`)
+				if (ctx.heading) {
+
+					const fileContent = await this.plugin.app.vault.read(logFile)
+					const insertPos = ctx.heading?.position
+					const updatedContent = fileContent.slice(0, insertPos.start)
+						+ `${logText}\n`
+						+ fileContent.slice(insertPos.end);
+					await this.plugin.app.vault.modify(logFile)
+
+
+				} else {
+					await this.plugin.app.vault.append(logFile, `\n${logText}`)
+				}
 			}
 		}
 
